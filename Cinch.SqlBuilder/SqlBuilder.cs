@@ -27,7 +27,7 @@ namespace Cinch.SqlBuilder
                 template = Regex.Replace(template, $"\\|\\|{clauseSet.Key}\\|\\|", clauseSet.Value.ToSql(), RegexOptions.IgnoreCase);
             }
 
-            template = Regex.Replace(template, @"\|\|[a-z]+\|\|", "");
+            template = Regex.Replace(template, @"\|\|[a-z]+\|\|\s{0,1}", "").Trim();
 
             return template;
         }
@@ -39,16 +39,16 @@ namespace Cinch.SqlBuilder
             Where($"EXISTS ({sql})");
 
         public ISqlBuilder From(string sql) =>
-            AddClause("from", sql, null, " FROM ", null);
+            AddClause("from", sql, null, "FROM ", null);
 
         public ISqlBuilder From(ISqlBuilder sqlBuilder, string alias) =>
-            AddClause("from", sqlBuilder.ToSql(), null, " FROM ( ", $" ) as {alias}");
+            AddClause("from", sqlBuilder.ToSql(), null, "FROM (", $") as {alias}");
 
         public ISqlBuilder GroupBy(string sql) =>
             AddClause("groupby", sql, ", ", "GROUP BY ", null);
 
         public ISqlBuilder Having(string sql) =>
-            AddClause("having", sql, ", ", "having ", null);
+            AddClause("having", sql, ", ", "HAVING ", null);
 
         public ISqlBuilder Join(string sql) =>
             AddClause("join", sql, " INNER JOIN ", null, null, false);
@@ -63,7 +63,7 @@ namespace Cinch.SqlBuilder
             AddClause("set", sql, ", ", "SET ", null);
 
         public ISqlBuilder Update(string sql) =>
-            AddClause("update", sql, null, " UPDATE ", null);
+            AddClause("update", sql, null, "UPDATE ", null);
 
         public ISqlBuilder Where(string sql) =>
             AddClause("where", sql, " AND ", "WHERE ", null);
@@ -77,7 +77,7 @@ namespace Cinch.SqlBuilder
 
             if (!clauses.TryGetValue(keyword, out _clauses))
             {
-                _clauses = new SqlClauseSet(keyword, glue, pre, post, singular);
+                _clauses = new SqlClauseSet(glue, pre, post, singular);
                 clauses[keyword] = _clauses;
             }
 
@@ -99,17 +99,15 @@ namespace Cinch.SqlBuilder
 
         class SqlClauseSet : HashSet<SqlClause>
         {
-            public SqlClauseSet(string keyword, string glue, string pre, string post, bool singular = true)
+            public SqlClauseSet(string glue, string pre, string post, bool singular = true)
             {
                 Glue = glue;
-                Keyword = keyword;
                 Post = post;
                 Pre = pre;
                 Singular = singular;
             }
 
             public string Glue { get; }
-            public string Keyword { get; }
             public string Post { get; }
             public string Pre { get; }
             public bool Singular { get; }
