@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Description>Makes building dynamic SQL Server Queries easier.</Description>
+    <Copyright>2017</Copyright>
+    <PackageLicenseUrl>https://github.com/pimbrouwers/Cinch.SqlBuilder/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/pimbrouwers/Cinch.SqlBuilder/blob/master/README.md</PackageProjectUrl>
+    <PackageIconUrl>http://www.pimbrouwers.com/cinch.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/pimbrouwers/Cinch.SqlBuilder</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+    <PackageTags>sql query querybuilder</PackageTags>
+  </PropertyGroup>
+
+</Project>
