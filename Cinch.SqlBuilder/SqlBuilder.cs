@@ -32,6 +32,9 @@ namespace Cinch.SqlBuilder
             return template;
         }
 
+        public ISqlBuilder Columns(string sql) =>
+            AddClause("columns", sql, ", ", "(", ")");
+
         public ISqlBuilder Exists(ISqlBuilder sqlBuilder) =>
             Where($"EXISTS ({sqlBuilder.ToSql()})");
 
@@ -50,6 +53,9 @@ namespace Cinch.SqlBuilder
         public ISqlBuilder Having(string sql) =>
             AddClause("having", sql, ", ", "HAVING ", null);
 
+        public ISqlBuilder Insert(string sql) =>
+            AddClause("insert", sql, null, "INSERT INTO ", null);
+
         public ISqlBuilder Join(string sql) =>
             AddClause("join", sql, " INNER JOIN ", null, null, false);
 
@@ -64,6 +70,9 @@ namespace Cinch.SqlBuilder
 
         public ISqlBuilder Update(string sql) =>
             AddClause("update", sql, null, "UPDATE ", null);
+
+        public ISqlBuilder Values(string sql) =>
+            AddClause("values", sql, "), (", "VALUES (", ")");
 
         public ISqlBuilder Where(string sql) =>
             AddClause("where", sql, " AND ", "WHERE ", null);

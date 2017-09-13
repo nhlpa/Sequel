@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Xunit;
+﻿using Xunit;
 
 namespace Cinch.SqlBuilder.Tests
 {
@@ -66,7 +63,20 @@ namespace Cinch.SqlBuilder.Tests
 
             Assert.Equal(result, "SELECT * FROM dbo.Test t WHERE EXISTS (select null from dbo.Employee e where e.Id = t.EmployeeId)");
         }
-        
+
+        [Fact]
+        public void SelectMultipleTest()
+        {
+            var sqlBuilder = new SqlBuilder()
+                                 .Select("Id")
+                                 .Select("Salary")
+                                 .From("dbo.Test");
+
+            var result = sqlBuilder.ToSql();
+
+            Assert.Equal(result, "SELECT Id, Salary FROM dbo.Test");
+        }
+
         [Fact]
         public void SelectGroupByTest()
         {
@@ -182,6 +192,21 @@ namespace Cinch.SqlBuilder.Tests
             var result = sqlBuilder.ToSql();
 
             Assert.Equal(result, "UPDATE dbo.Test SET Salary = 100 WHERE EmployeeId = 1");
+        }
+
+        [Fact]
+        public void InsertTest()
+        {
+            var sqlBuilder = new SqlBuilder("||insert|| ||columns|| ||values||")
+                                .Insert("dbo.Test")
+                                .Columns("Name")
+                                .Columns("Salary")
+                                .Values("'Pim', 50")
+                                .Values("'Lindsey', 100");
+
+            var result = sqlBuilder.ToSql();
+
+            Assert.Equal(result, "INSERT INTO dbo.Test (Name, Salary) VALUES ('Pim', 50), ('Lindsey', 100)");
         }
     }
 }
