@@ -12,7 +12,7 @@ var sqlBuilder = new SqlBuilder()
 var sql = sqlBuilder.ToSql();
 
 /*
-	SELECT Id, Salary FROM dbo.Test
+SELECT Id, Salary FROM dbo.Test
 */
 ```
 
