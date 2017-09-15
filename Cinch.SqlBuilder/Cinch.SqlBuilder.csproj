@@ -10,10 +10,10 @@
     <RepositoryUrl>https://github.com/pimbrouwers/Cinch.SqlBuilder</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
     <PackageTags>sql query querybuilder</PackageTags>
-    <Version>1.0.1</Version>
-    <AssemblyVersion>1.0.0.1</AssemblyVersion>
-    <FileVersion>1.0.0.1</FileVersion>
-    <PackageReleaseNotes>Resolved spacing issues revealed by XUnit tests.</PackageReleaseNotes>
+    <Version>1.0.2</Version>
+    <AssemblyVersion>1.0.0.2</AssemblyVersion>
+    <FileVersion>1.0.0.2</FileVersion>
+    <PackageReleaseNotes>Added INSERT capabilities</PackageReleaseNotes>
   </PropertyGroup>
 
 </Project>

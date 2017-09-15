@@ -201,6 +201,20 @@ namespace Cinch.SqlBuilder.Tests
                                 .Insert("dbo.Test")
                                 .Columns("Name")
                                 .Columns("Salary")
+                                .Values("'Pim', 50");
+
+            var result = sqlBuilder.ToSql();
+
+            Assert.Equal(result, "INSERT INTO dbo.Test (Name, Salary) VALUES ('Pim', 50)");
+        }
+
+        [Fact]
+        public void InsertMultipleTest()
+        {
+            var sqlBuilder = new SqlBuilder("||insert|| ||columns|| ||values||")
+                                .Insert("dbo.Test")
+                                .Columns("Name")
+                                .Columns("Salary")
                                 .Values("'Pim', 50")
                                 .Values("'Lindsey', 100");
 
