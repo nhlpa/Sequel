@@ -107,6 +107,74 @@ namespace Cinch.SqlBuilder.Tests
         }
 
         [Fact]
+        public void SelectOrderByTest()
+        {
+            var sqlBuilder = new SqlBuilder()
+                                 .Select("*")
+                                 .From("dbo.Test")
+                                 .OrderBy("Id");
+
+            var result = sqlBuilder.ToSql();
+
+            Assert.Equal(result, "SELECT * FROM dbo.Test ORDER BY Id");
+        }
+
+        [Fact]
+        public void SelectOrderByDescTest()
+        {
+            var sqlBuilder = new SqlBuilder()
+                                 .Select("*")
+                                 .From("dbo.Test")
+                                 .OrderByDesc("Id");
+
+            var result = sqlBuilder.ToSql();
+
+            Assert.Equal(result, "SELECT * FROM dbo.Test ORDER BY Id DESC");
+        }
+
+        [Fact]
+        public void SelectOrderByMultipleTest()
+        {
+            var sqlBuilder = new SqlBuilder()
+                                 .Select("*")
+                                 .From("dbo.Test")
+                                 .OrderBy("Id")
+                                 .OrderBy("Salary");
+
+            var result = sqlBuilder.ToSql();
+
+            Assert.Equal(result, "SELECT * FROM dbo.Test ORDER BY Id, Salary");
+        }
+
+        [Fact]
+        public void SelectOrderByDescMultipleTest()
+        {
+            var sqlBuilder = new SqlBuilder()
+                                 .Select("*")
+                                 .From("dbo.Test")
+                                 .OrderByDesc("Id")
+                                 .OrderByDesc("Salary");
+
+            var result = sqlBuilder.ToSql();
+
+            Assert.Equal(result, "SELECT * FROM dbo.Test ORDER BY Id DESC, Salary DESC");
+        }
+
+        [Fact]
+        public void SelectOrderByMultipleMixedTest()
+        {
+            var sqlBuilder = new SqlBuilder()
+                                 .Select("*")
+                                 .From("dbo.Test")
+                                 .OrderBy("Id")
+                                 .OrderByDesc("Salary");
+
+            var result = sqlBuilder.ToSql();
+
+            Assert.Equal(result, "SELECT * FROM dbo.Test ORDER BY Id, Salary DESC");
+        }
+
+        [Fact]
         public void FromSqlBuilderTest()
         {
             var sqlBuilder1 = new SqlBuilder()

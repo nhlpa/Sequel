@@ -12,7 +12,7 @@ namespace Cinch.SqlBuilder
 
         public SqlBuilder()
         {
-            this.template = "||select|| ||from|| ||join|| ||where|| ||groupby|| ||having||";
+            this.template = "||select|| ||from|| ||join|| ||where|| ||groupby|| ||having|| ||orderby||";
         }
 
         public SqlBuilder(string template)
@@ -61,6 +61,12 @@ namespace Cinch.SqlBuilder
 
         public ISqlBuilder LeftJoin(string sql) =>
             AddClause("join", sql, " LEFT JOIN ", null, null, false);
+
+        public ISqlBuilder OrderBy(string sql) =>
+            AddClause("orderby", sql, ", ", "ORDER BY ", null);
+
+        public ISqlBuilder OrderByDesc(string sql) =>
+            AddClause("orderby", sql.IndexOf("desc", StringComparison.OrdinalIgnoreCase) > -1 ? sql : $"{sql} DESC" , ", ", "ORDER BY ", null);
 
         public ISqlBuilder Select(string sql) =>
             AddClause("select", sql, ", ", "SELECT ", null);
