@@ -18,6 +18,8 @@ namespace Cinch.SqlBuilder
         ISqlBuilder Insert(string sql);
         ISqlBuilder Join(string sql);
         ISqlBuilder LeftJoin(string sql);
+        ISqlBuilder OrderBy(string sql);
+        ISqlBuilder OrderByDesc(string sql);
         ISqlBuilder Select(string sql);
         ISqlBuilder Set(string sql);
         ISqlBuilder Update(string sql);
