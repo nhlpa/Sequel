@@ -31,7 +31,7 @@ namespace Cinch.SqlBuilder
 
             return template;
         }
-
+        
         public ISqlBuilder Columns(string sql) =>
             AddClause("columns", sql, ", ", "(", ")");
 
@@ -70,6 +70,9 @@ namespace Cinch.SqlBuilder
 
         public ISqlBuilder Update(string sql) =>
             AddClause("update", sql, null, "UPDATE ", null);
+
+        public ISqlBuilder Value(string sql) =>
+            AddClause("value", sql, ", ", "VALUES (", ")");
 
         public ISqlBuilder Values(string sql) =>
             AddClause("values", sql, "), (", "VALUES (", ")");

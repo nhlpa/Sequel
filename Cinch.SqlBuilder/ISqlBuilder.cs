@@ -7,7 +7,7 @@ namespace Cinch.SqlBuilder
     public interface ISqlBuilder
     {
         string ToSql();
-
+        
         ISqlBuilder Columns(string sql);
         ISqlBuilder Exists(ISqlBuilder sqlBuilder);
         ISqlBuilder Exists(string sql);
@@ -21,6 +21,7 @@ namespace Cinch.SqlBuilder
         ISqlBuilder Select(string sql);
         ISqlBuilder Set(string sql);
         ISqlBuilder Update(string sql);
+        ISqlBuilder Value(string sql);
         ISqlBuilder Values(string sql);
         ISqlBuilder Where(string sql);
         ISqlBuilder WhereOr(string sql);

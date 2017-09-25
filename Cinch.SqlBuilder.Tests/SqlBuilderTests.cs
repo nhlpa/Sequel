@@ -195,7 +195,21 @@ namespace Cinch.SqlBuilder.Tests
         }
 
         [Fact]
-        public void InsertTest()
+        public void InsertValueTest()
+        {
+            var sqlBuilder = new SqlBuilder("||insert|| ||columns|| ||value||")
+                                .Insert("dbo.Test")
+                                .Columns("Name")
+                                .Columns("Salary")
+                                .Value("'Pim'")
+                                .Value("50");
+
+            var result = sqlBuilder.ToSql();
+
+            Assert.Equal(result, "INSERT INTO dbo.Test (Name, Salary) VALUES ('Pim', 50)");
+        }
+
+        public void InsertValuesTest()
         {
             var sqlBuilder = new SqlBuilder("||insert|| ||columns|| ||values||")
                                 .Insert("dbo.Test")
