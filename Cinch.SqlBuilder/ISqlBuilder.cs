@@ -23,7 +23,7 @@ namespace Cinch.SqlBuilder
         ISqlBuilder Select(params string[] sql);
         ISqlBuilder Set(params string[] sql);
         ISqlBuilder Update(string sql);
-        ISqlBuilder Value(params string[] sql)
+        ISqlBuilder Value(params string[] sql);
         ISqlBuilder Values(params string[] sql);
         ISqlBuilder Where(string sql);
         ISqlBuilder WhereOr(string sql);
