@@ -8,7 +8,7 @@ namespace Cinch.SqlBuilder
     {
         string ToSql();
         
-        ISqlBuilder Columns(string sql);
+        ISqlBuilder Columns(params string[] sql);
         ISqlBuilder Exists(ISqlBuilder sqlBuilder);
         ISqlBuilder Exists(string sql);
         ISqlBuilder From(string sql);
@@ -20,11 +20,11 @@ namespace Cinch.SqlBuilder
         ISqlBuilder LeftJoin(string sql);
         ISqlBuilder OrderBy(string sql);
         ISqlBuilder OrderByDesc(string sql);
-        ISqlBuilder Select(string sql);
-        ISqlBuilder Set(string sql);
+        ISqlBuilder Select(params string[] sql);
+        ISqlBuilder Set(params string[] sql);
         ISqlBuilder Update(string sql);
-        ISqlBuilder Value(string sql);
-        ISqlBuilder Values(string sql);
+        ISqlBuilder Value(params string[] sql)
+        ISqlBuilder Values(params string[] sql);
         ISqlBuilder Where(string sql);
         ISqlBuilder WhereOr(string sql);
     }

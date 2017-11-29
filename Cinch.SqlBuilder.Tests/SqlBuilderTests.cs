@@ -78,6 +78,18 @@ namespace Cinch.SqlBuilder.Tests
         }
 
         [Fact]
+        public void SelectMultipleParamsTest()
+        {
+            var sqlBuilder = new SqlBuilder()
+                                 .Select("Id", "Salary")
+                                 .From("dbo.Test");
+
+            var result = sqlBuilder.ToSql();
+
+            Assert.Equal(result, "SELECT Id, Salary FROM dbo.Test");
+        }
+
+        [Fact]
         public void SelectGroupByTest()
         {
             var sqlBuilder = new SqlBuilder()
@@ -263,14 +275,25 @@ namespace Cinch.SqlBuilder.Tests
         }
 
         [Fact]
+        public void UpdateMultipleTest()
+        {
+            var sqlBuilder = new SqlBuilder("||update|| ||set|| ||where||")
+                                .Update("dbo.Test")
+                                .Set("Salary = 100", "ManagerId = 2")
+                                .Where("EmployeeId = 1");
+
+            var result = sqlBuilder.ToSql();
+
+            Assert.Equal(result, "UPDATE dbo.Test SET Salary = 100, ManagerId = 2 WHERE EmployeeId = 1");
+        }
+
+        [Fact]
         public void InsertValueTest()
         {
             var sqlBuilder = new SqlBuilder("||insert|| ||columns|| ||value||")
                                 .Insert("dbo.Test")
-                                .Columns("Name")
-                                .Columns("Salary")
-                                .Value("'Pim'")
-                                .Value("50");
+                                .Columns("Name", "Salary")
+                                .Value("'Pim'", "50");
 
             var result = sqlBuilder.ToSql();
 
@@ -284,8 +307,8 @@ namespace Cinch.SqlBuilder.Tests
                                 .Insert("dbo.Test")
                                 .Columns("Name")
                                 .Columns("Salary")
-                                .Values("'Pim', 50")
-                                .Values("'Lindsey', 100");
+                                .Values("'Pim'","50")
+                                .Values("'Lindsey'", "100");
 
             var result = sqlBuilder.ToSql();
 
