@@ -264,7 +264,7 @@ namespace Cinch.SqlBuilder.Tests
         [Fact]
         public void UpdateTest()
         {
-            var sqlBuilder = new SqlBuilder("||update|| ||set|| ||where||")
+            var sqlBuilder = new SqlBuilder()
                                 .Update("dbo.Test")
                                 .Set("Salary = 100")
                                 .Where("EmployeeId = 1");
@@ -277,7 +277,7 @@ namespace Cinch.SqlBuilder.Tests
         [Fact]
         public void UpdateMultipleTest()
         {
-            var sqlBuilder = new SqlBuilder("||update|| ||set|| ||where||")
+            var sqlBuilder = new SqlBuilder()
                                 .Update("dbo.Test")
                                 .Set("Salary = 100", "ManagerId = 2")
                                 .Where("EmployeeId = 1");
@@ -290,7 +290,7 @@ namespace Cinch.SqlBuilder.Tests
         [Fact]
         public void InsertValueTest()
         {
-            var sqlBuilder = new SqlBuilder("||insert|| ||columns|| ||value||")
+            var sqlBuilder = new SqlBuilder()
                                 .Insert("dbo.Test")
                                 .Columns("Name", "Salary")
                                 .Value("'Pim'", "50");
@@ -303,7 +303,7 @@ namespace Cinch.SqlBuilder.Tests
         [Fact]
         public void InsertMultipleTest()
         {
-            var sqlBuilder = new SqlBuilder("||insert|| ||columns|| ||values||")
+            var sqlBuilder = new SqlBuilder()
                                 .Insert("dbo.Test")
                                 .Columns("Name")
                                 .Columns("Salary")
