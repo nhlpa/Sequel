@@ -37,7 +37,34 @@ namespace Cinch.SqlBuilder.Tests
             Assert.Equal(result, "SELECT * FROM dbo.Test WHERE Id = 1");
         }
 
-        [Fact]
+		[Fact]
+		public void SelectStarWhereMultipleTest()
+		{
+			var sqlBuilder = new SqlBuilder()
+								 .Select("*")
+								 .From("dbo.Test")
+								 .Where("Id = 1")
+								 .Where("Num = 2");
+
+			var result = sqlBuilder.ToSql();
+
+			Assert.Equal(result, "SELECT * FROM dbo.Test WHERE Id = 1 AND Num = 2");
+		}
+
+		[Fact]
+		public void SelectStarWhereMultipleParamsTest()
+		{
+			var sqlBuilder = new SqlBuilder()
+								 .Select("*")
+								 .From("dbo.Test")
+								 .Where("Id = 1", "Num = 2");
+
+			var result = sqlBuilder.ToSql();
+
+			Assert.Equal(result, "SELECT * FROM dbo.Test WHERE Id = 1 AND Num = 2");
+		}
+
+		[Fact]
         public void SelectStarWhereOrTest()
         {
             var sqlBuilder = new SqlBuilder()
@@ -51,7 +78,20 @@ namespace Cinch.SqlBuilder.Tests
             Assert.Equal(result, "SELECT * FROM dbo.Test WHERE Id = 1 OR Salary = 50");
         }
 
-        [Fact]
+		[Fact]
+		public void SelectStarWhereOrParamsTest()
+		{
+			var sqlBuilder = new SqlBuilder()
+								 .Select("*")
+								 .From("dbo.Test")
+								 .WhereOr("Id = 1", "Salary = 50");
+
+			var result = sqlBuilder.ToSql();
+
+			Assert.Equal(result, "SELECT * FROM dbo.Test WHERE Id = 1 OR Salary = 50");
+		}
+
+		[Fact]
         public void SelectStarWhereExistsTest()
         {
             var sqlBuilder = new SqlBuilder()

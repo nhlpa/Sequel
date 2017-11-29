@@ -10,10 +10,10 @@
     <RepositoryUrl>https://github.com/pimbrouwers/Cinch.SqlBuilder</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
     <PackageTags>sql query querybuilder</PackageTags>
-    <Version>1.0.5</Version>
-    <AssemblyVersion>1.0.0.5</AssemblyVersion>
-    <FileVersion>1.0.0.5</FileVersion>
-    <PackageReleaseNotes>params capabilities to reduce code noise .Select("col1").Select("col2") becomes .Select("col1", "col2") with similar treatments for .Columns(), .Value(), .Values(), .Set()</PackageReleaseNotes>
+    <Version>1.0.6</Version>
+    <AssemblyVersion>1.0.0.6</AssemblyVersion>
+    <FileVersion>1.0.0.6</FileVersion>
+    <PackageReleaseNotes>params for groupby having, orderby, where and whereor</PackageReleaseNotes>
   </PropertyGroup>
 
 </Project>

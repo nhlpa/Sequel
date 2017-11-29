@@ -44,7 +44,7 @@ namespace Cinch.SqlBuilder
 		}
 
 		public ISqlBuilder Columns(params string[] sql) =>
-			AddClause("columns", string.Join(", ", sql), ", ", "(", ")");
+			AddClause("columns", sql, ", ", "(", ")");
 
 		public ISqlBuilder Exists(ISqlBuilder sqlBuilder) =>
 			Where($"EXISTS ({sqlBuilder.ToSql()})");
@@ -58,10 +58,10 @@ namespace Cinch.SqlBuilder
 		public ISqlBuilder From(ISqlBuilder sqlBuilder, string alias) =>
 			AddClause("from", sqlBuilder.ToSql(), null, "FROM (", $") as {alias}");
 
-		public ISqlBuilder GroupBy(string sql) =>
+		public ISqlBuilder GroupBy(params string[] sql) =>
 			AddClause("groupby", sql, ", ", "GROUP BY ", null);
 
-		public ISqlBuilder Having(string sql) =>
+		public ISqlBuilder Having(params string[] sql) =>
 			AddClause("having", sql, ", ", "HAVING ", null);
 
 		public ISqlBuilder Insert(string sql)
@@ -76,17 +76,17 @@ namespace Cinch.SqlBuilder
 		public ISqlBuilder LeftJoin(string sql) =>
 			AddClause("join", sql, " LEFT JOIN ", null, null, false);
 
-		public ISqlBuilder OrderBy(string sql) =>
+		public ISqlBuilder OrderBy(params string[] sql) =>
 			AddClause("orderby", sql, ", ", "ORDER BY ", null);
 
 		public ISqlBuilder OrderByDesc(string sql) =>
 			AddClause("orderby", sql.IndexOf("desc", StringComparison.OrdinalIgnoreCase) > -1 ? sql : $"{sql} DESC", ", ", "ORDER BY ", null);
 
 		public ISqlBuilder Select(params string[] sql) =>
-			AddClause("select", string.Join(", ", sql), ", ", "SELECT ", null);
+			AddClause("select", sql, ", ", "SELECT ", null);
 
 		public ISqlBuilder Set(params string[] sql) =>
-			AddClause("set", string.Join(", ", sql), ", ", "SET ", null);
+			AddClause("set", sql, ", ", "SET ", null);
 
 		public ISqlBuilder Update(string sql)
 		{
@@ -95,16 +95,19 @@ namespace Cinch.SqlBuilder
 		}
 
 		public ISqlBuilder Value(params string[] sql) =>
-			AddClause("values", string.Join(", ", sql), ", ", "VALUES (", ")");
+			AddClause("values", sql, ", ", "VALUES (", ")");
 
 		public ISqlBuilder Values(params string[] sql) =>
-			AddClause("values", string.Join(", ", sql), "), (", "VALUES (", ")");
+			AddClause("values", sql, "), (", "VALUES (", ")");
 
-		public ISqlBuilder Where(string sql) =>
-			AddClause("where", sql, " AND ", "WHERE ", null);
+		public ISqlBuilder Where(params string[] sql) =>
+			AddClause("where", string.Join(" AND ", sql), " AND ", "WHERE ", null);
 
-		public ISqlBuilder WhereOr(string sql) =>
-			AddClause("where", sql, " OR ", "WHERE ", null);
+		public ISqlBuilder WhereOr(params string[] sql) =>
+			AddClause("where", string.Join(" OR ", sql), " OR ", "WHERE ", null);
+
+		ISqlBuilder AddClause(string keyword, string[] sql, string glue, string pre, string post, bool singular = true) =>
+			AddClause(keyword, string.Join(", ", sql), glue, pre, post, singular);
 
 		ISqlBuilder AddClause(string keyword, string sql, string glue, string pre, string post, bool singular = true)
 		{
