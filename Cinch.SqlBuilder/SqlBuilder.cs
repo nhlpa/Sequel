@@ -108,9 +108,7 @@ namespace Cinch.SqlBuilder
 
 		ISqlBuilder AddClause(string keyword, string sql, string glue, string pre, string post, bool singular = true)
 		{
-			SqlClauseSet _clauses = null;
-
-			if (!clauses.TryGetValue(keyword, out _clauses))
+			if (!clauses.TryGetValue(keyword, out SqlClauseSet _clauses))
 			{
 				_clauses = new SqlClauseSet(glue, pre, post, singular);
 				clauses[keyword] = _clauses;
