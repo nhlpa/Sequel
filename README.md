@@ -45,3 +45,22 @@ var sql = sqlBuilder.ToSql(); // .ToString() also works
 UPDATE dbo.Test SET Salary = 100, ManagerId = 2 WHERE EmployeeId = 1
 */
 ```
+
+## Usage with [dapper.net](https://github.com/StackExchange/Dapper)
+
+```c#
+using(var conn = new SqlConnection("your connection string")
+{
+    var sqlParams = new DynamicParameters();
+    sqlParams.Add("Id", 1);
+    
+    var sqlBuilder = new SqlBuilder()
+		        .Select("Id", "Salary")
+		        .From("dbo.Test")
+		        .Where("Id", "@Id");
+
+    var sql = sqlBuilder.ToSql(); // .ToString() also works 
+    
+    var result = conn.Query(sql, sqlParams);
+}
+```
