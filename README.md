@@ -60,6 +60,9 @@ using(var conn = new SqlConnection("your connection string")
 		        .Where("Id", "@Id");
 
     var sql = sqlBuilder.ToSql(); // .ToString() also works 
+   /*
+    SELECT Id, Salary FROM dbo.Test WHERE Id = @Id
+    */ 
     
     var result = conn.Query(sql, sqlParams);
 }
