@@ -1,5 +1,5 @@
 # Cinch.SqlBuilder
-Fluent SQL Server Query Builder, excluding `DELETE`.
+Fluent SQL Server Query Builder. For in-depth use cases see the Cinch.SqlBuilder.Tests project.
 
 ## `SELECT` (uses default template)
 
