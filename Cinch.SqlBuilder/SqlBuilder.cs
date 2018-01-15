@@ -13,6 +13,7 @@ namespace Cinch.SqlBuilder
 			{ "default", "||select|| ||from|| ||join|| ||where|| ||groupby|| ||having|| ||orderby||" },
 			{ "insert", "||insert|| ||columns|| ||values||" },
 			{ "update", "||update|| ||set|| ||where||" },
+			{ "delete", "||delete|| ||from|| ||join|| ||where||" }
 		};
 		readonly IDictionary<string, SqlClauseSet> clauses = new Dictionary<string, SqlClauseSet>();
 
@@ -58,6 +59,18 @@ namespace Cinch.SqlBuilder
 		public ISqlBuilder From(ISqlBuilder sqlBuilder, string alias) =>
 			AddClause("from", sqlBuilder.ToSql(), null, "FROM (", $") as {alias}");
 
+		public ISqlBuilder Delete()
+		{
+			template = templates["delete"];
+			return AddClause("delete", "", null, "DELETE ", null);
+		}
+
+		public ISqlBuilder Delete(string sql)
+		{
+			template = templates["delete"];
+			return AddClause("delete", sql, null, "DELETE ", null);
+		}
+			
 		public ISqlBuilder GroupBy(params string[] sql) =>
 			AddClause("groupby", sql, ", ", "GROUP BY ", null);
 

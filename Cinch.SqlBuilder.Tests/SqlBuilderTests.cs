@@ -2,40 +2,40 @@
 
 namespace Cinch.SqlBuilder.Tests
 {
-    public class SqlBuilderTests
-    {        
-        [Fact]
-        public void EmptyBuilderTest()
-        {
-            var sqlBuilder = new SqlBuilder();
-            
-            Assert.Equal(sqlBuilder.ToSql(), "");
-        }
+	public class SqlBuilderTests
+	{
+		[Fact]
+		public void EmptyBuilderTest()
+		{
+			var sqlBuilder = new SqlBuilder();
 
-        [Fact]
-        public void SelectStarTest()
-        {
-            var sqlBuilder = new SqlBuilder()
-                                 .Select("*")
-                                 .From("dbo.Test");
+			Assert.Equal(sqlBuilder.ToSql(), "");
+		}
 
-            var result = sqlBuilder.ToSql();
+		[Fact]
+		public void SelectStarTest()
+		{
+			var sqlBuilder = new SqlBuilder()
+													 .Select("*")
+													 .From("dbo.Test");
 
-            Assert.Equal(result, "SELECT * FROM dbo.Test");
-        }
+			var result = sqlBuilder.ToSql();
 
-        [Fact]
-        public void SelectStarWhereTest()
-        {
-            var sqlBuilder = new SqlBuilder()
-                                 .Select("*")
-                                 .From("dbo.Test")
-                                 .Where("Id = 1");
+			Assert.Equal("SELECT * FROM dbo.Test", result);
+		}
 
-            var result = sqlBuilder.ToSql();
+		[Fact]
+		public void SelectStarWhereTest()
+		{
+			var sqlBuilder = new SqlBuilder()
+													 .Select("*")
+													 .From("dbo.Test")
+													 .Where("Id = 1");
 
-            Assert.Equal(result, "SELECT * FROM dbo.Test WHERE Id = 1");
-        }
+			var result = sqlBuilder.ToSql();
+
+			Assert.Equal("SELECT * FROM dbo.Test WHERE Id = 1", result);
+		}
 
 		[Fact]
 		public void SelectStarWhereMultipleTest()
@@ -48,7 +48,7 @@ namespace Cinch.SqlBuilder.Tests
 
 			var result = sqlBuilder.ToSql();
 
-			Assert.Equal(result, "SELECT * FROM dbo.Test WHERE Id = 1 AND Num = 2");
+			Assert.Equal("SELECT * FROM dbo.Test WHERE Id = 1 AND Num = 2", result);
 		}
 
 		[Fact]
@@ -61,22 +61,22 @@ namespace Cinch.SqlBuilder.Tests
 
 			var result = sqlBuilder.ToSql();
 
-			Assert.Equal(result, "SELECT * FROM dbo.Test WHERE Id = 1 AND Num = 2");
+			Assert.Equal("SELECT * FROM dbo.Test WHERE Id = 1 AND Num = 2", result);
 		}
 
 		[Fact]
-        public void SelectStarWhereOrTest()
-        {
-            var sqlBuilder = new SqlBuilder()
-                                 .Select("*")
-                                 .From("dbo.Test")
-                                 .WhereOr("Id = 1")
-                                 .WhereOr("Salary = 50");
+		public void SelectStarWhereOrTest()
+		{
+			var sqlBuilder = new SqlBuilder()
+													 .Select("*")
+													 .From("dbo.Test")
+													 .WhereOr("Id = 1")
+													 .WhereOr("Salary = 50");
 
-            var result = sqlBuilder.ToSql();
+			var result = sqlBuilder.ToSql();
 
-            Assert.Equal(result, "SELECT * FROM dbo.Test WHERE Id = 1 OR Salary = 50");
-        }
+			Assert.Equal("SELECT * FROM dbo.Test WHERE Id = 1 OR Salary = 50", result);
+		}
 
 		[Fact]
 		public void SelectStarWhereOrParamsTest()
@@ -88,271 +88,298 @@ namespace Cinch.SqlBuilder.Tests
 
 			var result = sqlBuilder.ToSql();
 
-			Assert.Equal(result, "SELECT * FROM dbo.Test WHERE Id = 1 OR Salary = 50");
+			Assert.Equal("SELECT * FROM dbo.Test WHERE Id = 1 OR Salary = 50", result);
 		}
 
 		[Fact]
-        public void SelectStarWhereExistsTest()
-        {
-            var sqlBuilder = new SqlBuilder()
-                                 .Select("*")
-                                 .From("dbo.Test t")
-                                 .Exists("select null from dbo.Employee e where e.Id = t.EmployeeId");
+		public void SelectStarWhereExistsTest()
+		{
+			var sqlBuilder = new SqlBuilder()
+													 .Select("*")
+													 .From("dbo.Test t")
+													 .Exists("select null from dbo.Employee e where e.Id = t.EmployeeId");
 
-            var result = sqlBuilder.ToSql();
+			var result = sqlBuilder.ToSql();
 
-            Assert.Equal(result, "SELECT * FROM dbo.Test t WHERE EXISTS (select null from dbo.Employee e where e.Id = t.EmployeeId)");
-        }
+			Assert.Equal("SELECT * FROM dbo.Test t WHERE EXISTS (select null from dbo.Employee e where e.Id = t.EmployeeId)", result);
+		}
 
-        [Fact]
-        public void SelectMultipleTest()
-        {
-            var sqlBuilder = new SqlBuilder()
-                                 .Select("Id")
-                                 .Select("Salary")
-                                 .From("dbo.Test");
+		[Fact]
+		public void SelectMultipleTest()
+		{
+			var sqlBuilder = new SqlBuilder()
+													 .Select("Id")
+													 .Select("Salary")
+													 .From("dbo.Test");
 
-            var result = sqlBuilder.ToSql();
+			var result = sqlBuilder.ToSql();
 
-            Assert.Equal(result, "SELECT Id, Salary FROM dbo.Test");
-        }
+			Assert.Equal("SELECT Id, Salary FROM dbo.Test", result);
+		}
 
-        [Fact]
-        public void SelectMultipleParamsTest()
-        {
-            var sqlBuilder = new SqlBuilder()
-                                 .Select("Id", "Salary")
-                                 .From("dbo.Test");
+		[Fact]
+		public void SelectMultipleParamsTest()
+		{
+			var sqlBuilder = new SqlBuilder()
+													 .Select("Id", "Salary")
+													 .From("dbo.Test");
 
-            var result = sqlBuilder.ToSql();
+			var result = sqlBuilder.ToSql();
 
-            Assert.Equal(result, "SELECT Id, Salary FROM dbo.Test");
-        }
+			Assert.Equal("SELECT Id, Salary FROM dbo.Test", result);
+		}
 
-        [Fact]
-        public void SelectGroupByTest()
-        {
-            var sqlBuilder = new SqlBuilder()
-                                 .Select("Id")
-                                 .Select("Count(Salary) as TotalSalary")
-                                 .From("dbo.Test")
-                                 .GroupBy("Id");
+		[Fact]
+		public void SelectGroupByTest()
+		{
+			var sqlBuilder = new SqlBuilder()
+													 .Select("Id")
+													 .Select("Count(Salary) as TotalSalary")
+													 .From("dbo.Test")
+													 .GroupBy("Id");
 
-            var result = sqlBuilder.ToSql();
+			var result = sqlBuilder.ToSql();
 
-            Assert.Equal(result, "SELECT Id, Count(Salary) as TotalSalary FROM dbo.Test GROUP BY Id");
-        }
+			Assert.Equal("SELECT Id, Count(Salary) as TotalSalary FROM dbo.Test GROUP BY Id", result);
+		}
 
-        [Fact]
-        public void SelectGroupByHavingTest()
-        {
-            var sqlBuilder = new SqlBuilder()
-                                 .Select("Id")
-                                 .Select("Count(Salary) as TotalSalary")
-                                 .From("dbo.Test")
-                                 .GroupBy("Id")
-                                 .Having("Count(Salary) > 100");
+		[Fact]
+		public void SelectGroupByHavingTest()
+		{
+			var sqlBuilder = new SqlBuilder()
+													 .Select("Id")
+													 .Select("Count(Salary) as TotalSalary")
+													 .From("dbo.Test")
+													 .GroupBy("Id")
+													 .Having("Count(Salary) > 100");
 
-            var result = sqlBuilder.ToSql();
+			var result = sqlBuilder.ToSql();
 
-            Assert.Equal(result, "SELECT Id, Count(Salary) as TotalSalary FROM dbo.Test GROUP BY Id HAVING Count(Salary) > 100");
-        }
+			Assert.Equal("SELECT Id, Count(Salary) as TotalSalary FROM dbo.Test GROUP BY Id HAVING Count(Salary) > 100", result);
+		}
 
-        [Fact]
-        public void SelectOrderByTest()
-        {
-            var sqlBuilder = new SqlBuilder()
-                                 .Select("*")
-                                 .From("dbo.Test")
-                                 .OrderBy("Id");
+		[Fact]
+		public void SelectOrderByTest()
+		{
+			var sqlBuilder = new SqlBuilder()
+													 .Select("*")
+													 .From("dbo.Test")
+													 .OrderBy("Id");
 
-            var result = sqlBuilder.ToSql();
+			var result = sqlBuilder.ToSql();
 
-            Assert.Equal(result, "SELECT * FROM dbo.Test ORDER BY Id");
-        }
+			Assert.Equal("SELECT * FROM dbo.Test ORDER BY Id", result);
+		}
 
-        [Fact]
-        public void SelectOrderByDescTest()
-        {
-            var sqlBuilder = new SqlBuilder()
-                                 .Select("*")
-                                 .From("dbo.Test")
-                                 .OrderByDesc("Id");
+		[Fact]
+		public void SelectOrderByDescTest()
+		{
+			var sqlBuilder = new SqlBuilder()
+													 .Select("*")
+													 .From("dbo.Test")
+													 .OrderByDesc("Id");
 
-            var result = sqlBuilder.ToSql();
+			var result = sqlBuilder.ToSql();
 
-            Assert.Equal(result, "SELECT * FROM dbo.Test ORDER BY Id DESC");
-        }
+			Assert.Equal("SELECT * FROM dbo.Test ORDER BY Id DESC", result);
+		}
 
-        [Fact]
-        public void SelectOrderByMultipleTest()
-        {
-            var sqlBuilder = new SqlBuilder()
-                                 .Select("*")
-                                 .From("dbo.Test")
-                                 .OrderBy("Id")
-                                 .OrderBy("Salary");
+		[Fact]
+		public void SelectOrderByMultipleTest()
+		{
+			var sqlBuilder = new SqlBuilder()
+													 .Select("*")
+													 .From("dbo.Test")
+													 .OrderBy("Id")
+													 .OrderBy("Salary");
 
-            var result = sqlBuilder.ToSql();
+			var result = sqlBuilder.ToSql();
 
-            Assert.Equal(result, "SELECT * FROM dbo.Test ORDER BY Id, Salary");
-        }
+			Assert.Equal("SELECT * FROM dbo.Test ORDER BY Id, Salary", result);
+		}
 
-        [Fact]
-        public void SelectOrderByDescMultipleTest()
-        {
-            var sqlBuilder = new SqlBuilder()
-                                 .Select("*")
-                                 .From("dbo.Test")
-                                 .OrderByDesc("Id")
-                                 .OrderByDesc("Salary");
+		[Fact]
+		public void SelectOrderByDescMultipleTest()
+		{
+			var sqlBuilder = new SqlBuilder()
+													 .Select("*")
+													 .From("dbo.Test")
+													 .OrderByDesc("Id")
+													 .OrderByDesc("Salary");
 
-            var result = sqlBuilder.ToSql();
+			var result = sqlBuilder.ToSql();
 
-            Assert.Equal(result, "SELECT * FROM dbo.Test ORDER BY Id DESC, Salary DESC");
-        }
+			Assert.Equal("SELECT * FROM dbo.Test ORDER BY Id DESC, Salary DESC", result);
+		}
 
-        [Fact]
-        public void SelectOrderByMultipleMixedTest()
-        {
-            var sqlBuilder = new SqlBuilder()
-                                 .Select("*")
-                                 .From("dbo.Test")
-                                 .OrderBy("Id")
-                                 .OrderByDesc("Salary");
+		[Fact]
+		public void SelectOrderByMultipleMixedTest()
+		{
+			var sqlBuilder = new SqlBuilder()
+													 .Select("*")
+													 .From("dbo.Test")
+													 .OrderBy("Id")
+													 .OrderByDesc("Salary");
 
-            var result = sqlBuilder.ToSql();
+			var result = sqlBuilder.ToSql();
 
-            Assert.Equal(result, "SELECT * FROM dbo.Test ORDER BY Id, Salary DESC");
-        }
+			Assert.Equal("SELECT * FROM dbo.Test ORDER BY Id, Salary DESC", result);
+		}
 
-        [Fact]
-        public void FromSqlBuilderTest()
-        {
-            var sqlBuilder1 = new SqlBuilder()
-                                 .Select("*")
-                                 .From("dbo.Test")
-                                 .Where("Id = 1");
+		[Fact]
+		public void FromSqlBuilderTest()
+		{
+			var sqlBuilder1 = new SqlBuilder()
+													 .Select("*")
+													 .From("dbo.Test")
+													 .Where("Id = 1");
 
-            var sqlBuilder2 = new SqlBuilder()
-                                  .Select("*")
-                                  .From(sqlBuilder1, "t1");
+			var sqlBuilder2 = new SqlBuilder()
+														.Select("*")
+														.From(sqlBuilder1, "t1");
 
-            var result = sqlBuilder2.ToSql();
+			var result = sqlBuilder2.ToSql();
 
-            Assert.Equal(result, "SELECT * FROM (SELECT * FROM dbo.Test WHERE Id = 1) as t1");
-        }
+			Assert.Equal("SELECT * FROM (SELECT * FROM dbo.Test WHERE Id = 1) as t1", result);
+		}
 
-        [Fact]
-        public void WhereExistsSqlBuilderTest()
-        {
-            var sqlBuilder1 = new SqlBuilder()
-                                 .Select("null")
-                                 .From("dbo.Test")
-                                 .Where("Salary > 50");
+		[Fact]
+		public void WhereExistsSqlBuilderTest()
+		{
+			var sqlBuilder1 = new SqlBuilder()
+													 .Select("null")
+													 .From("dbo.Test")
+													 .Where("Salary > 50");
 
-            var sqlBuilder2 = new SqlBuilder()
-                                  .Select("*")
-                                  .From("dbo.Test")
-                                  .Exists(sqlBuilder1);
+			var sqlBuilder2 = new SqlBuilder()
+														.Select("*")
+														.From("dbo.Test")
+														.Exists(sqlBuilder1);
 
-            var result = sqlBuilder2.ToSql();
+			var result = sqlBuilder2.ToSql();
 
-            Assert.Equal(result, "SELECT * FROM dbo.Test WHERE EXISTS (SELECT null FROM dbo.Test WHERE Salary > 50)");
-        }
+			Assert.Equal("SELECT * FROM dbo.Test WHERE EXISTS (SELECT null FROM dbo.Test WHERE Salary > 50)", result);
+		}
 
-        [Fact]
-        public void JoinTest()
-        {
-            var sqlBuilder = new SqlBuilder()
-                                .Select("*")
-                                .From("dbo.Test t")
-                                .Join("dbo.Employee e on e.Id = t.EmployeeId");
+		[Fact]
+		public void JoinTest()
+		{
+			var sqlBuilder = new SqlBuilder()
+													.Select("*")
+													.From("dbo.Test t")
+													.Join("dbo.Employee e on e.Id = t.EmployeeId");
 
-            var result = sqlBuilder.ToSql();
+			var result = sqlBuilder.ToSql();
 
-            Assert.Equal(result, "SELECT * FROM dbo.Test t INNER JOIN dbo.Employee e on e.Id = t.EmployeeId");
-        }
+			Assert.Equal("SELECT * FROM dbo.Test t INNER JOIN dbo.Employee e on e.Id = t.EmployeeId", result);
+		}
 
-        [Fact]
-        public void LeftJoinTest()
-        {
-            var sqlBuilder = new SqlBuilder()
-                                .Select("*")
-                                .From("dbo.Test t")
-                                .LeftJoin("dbo.Employee e on e.Id = t.EmployeeId");
+		[Fact]
+		public void LeftJoinTest()
+		{
+			var sqlBuilder = new SqlBuilder()
+													.Select("*")
+													.From("dbo.Test t")
+													.LeftJoin("dbo.Employee e on e.Id = t.EmployeeId");
 
-            var result = sqlBuilder.ToSql();
+			var result = sqlBuilder.ToSql();
 
-            Assert.Equal(result, "SELECT * FROM dbo.Test t LEFT JOIN dbo.Employee e on e.Id = t.EmployeeId");
-        }
+			Assert.Equal("SELECT * FROM dbo.Test t LEFT JOIN dbo.Employee e on e.Id = t.EmployeeId", result);
+		}
 
-        [Fact]
-        public void JoinLeftJoinTest()
-        {
-            var sqlBuilder = new SqlBuilder()
-                                .Select("*")
-                                .From("dbo.Test t")
-                                .Join("dbo.Employee e on e.Id = t.EmployeeId")
-                                .LeftJoin("dbo.Manager m on m.Id = e.ManagerId");
+		[Fact]
+		public void JoinLeftJoinTest()
+		{
+			var sqlBuilder = new SqlBuilder()
+													.Select("*")
+													.From("dbo.Test t")
+													.Join("dbo.Employee e on e.Id = t.EmployeeId")
+													.LeftJoin("dbo.Manager m on m.Id = e.ManagerId");
 
-            var result = sqlBuilder.ToSql();
+			var result = sqlBuilder.ToSql();
 
-            Assert.Equal(result, "SELECT * FROM dbo.Test t INNER JOIN dbo.Employee e on e.Id = t.EmployeeId LEFT JOIN dbo.Manager m on m.Id = e.ManagerId");
-        }
+			Assert.Equal("SELECT * FROM dbo.Test t INNER JOIN dbo.Employee e on e.Id = t.EmployeeId LEFT JOIN dbo.Manager m on m.Id = e.ManagerId", result);
+		}
 
-        [Fact]
-        public void UpdateTest()
-        {
-            var sqlBuilder = new SqlBuilder()
-                                .Update("dbo.Test")
-                                .Set("Salary = 100")
-                                .Where("EmployeeId = 1");
+		[Fact]
+		public void UpdateTest()
+		{
+			var sqlBuilder = new SqlBuilder()
+													.Update("dbo.Test")
+													.Set("Salary = 100")
+													.Where("EmployeeId = 1");
 
-            var result = sqlBuilder.ToSql();
+			var result = sqlBuilder.ToSql();
 
-            Assert.Equal(result, "UPDATE dbo.Test SET Salary = 100 WHERE EmployeeId = 1");
-        }
+			Assert.Equal("UPDATE dbo.Test SET Salary = 100 WHERE EmployeeId = 1", result);
+		}
 
-        [Fact]
-        public void UpdateMultipleTest()
-        {
-            var sqlBuilder = new SqlBuilder()
-                                .Update("dbo.Test")
-                                .Set("Salary = 100", "ManagerId = 2")
-                                .Where("EmployeeId = 1");
+		[Fact]
+		public void UpdateMultipleTest()
+		{
+			var sqlBuilder = new SqlBuilder()
+													.Update("dbo.Test")
+													.Set("Salary = 100", "ManagerId = 2")
+													.Where("EmployeeId = 1");
 
-            var result = sqlBuilder.ToSql();
+			var result = sqlBuilder.ToSql();
 
-            Assert.Equal(result, "UPDATE dbo.Test SET Salary = 100, ManagerId = 2 WHERE EmployeeId = 1");
-        }
+			Assert.Equal("UPDATE dbo.Test SET Salary = 100, ManagerId = 2 WHERE EmployeeId = 1", result);
+		}
 
-        [Fact]
-        public void InsertValueTest()
-        {
-            var sqlBuilder = new SqlBuilder()
-                                .Insert("dbo.Test")
-                                .Columns("Name", "Salary")
-                                .Value("'Pim'", "50");
+		[Fact]
+		public void InsertValueTest()
+		{
+			var sqlBuilder = new SqlBuilder()
+													.Insert("dbo.Test")
+													.Columns("Name", "Salary")
+													.Value("'Pim'", "50");
 
-            var result = sqlBuilder.ToSql();
+			var result = sqlBuilder.ToSql();
 
-            Assert.Equal(result, "INSERT INTO dbo.Test (Name, Salary) VALUES ('Pim', 50)");
-        }
-        
-        [Fact]
-        public void InsertMultipleTest()
-        {
-            var sqlBuilder = new SqlBuilder()
-                                .Insert("dbo.Test")
-                                .Columns("Name")
-                                .Columns("Salary")
-                                .Values("'Pim'","50")
-                                .Values("'Lindsey'", "100");
+			Assert.Equal("INSERT INTO dbo.Test (Name, Salary) VALUES ('Pim', 50)", result);
+		}
 
-            var result = sqlBuilder.ToSql();
+		[Fact]
+		public void InsertMultipleTest()
+		{
+			var sqlBuilder = new SqlBuilder()
+													.Insert("dbo.Test")
+													.Columns("Name")
+													.Columns("Salary")
+													.Values("'Pim'", "50")
+													.Values("'Lindsey'", "100");
 
-            Assert.Equal(result, "INSERT INTO dbo.Test (Name, Salary) VALUES ('Pim', 50), ('Lindsey', 100)");
-        }
-    }
+			var result = sqlBuilder.ToSql();
+
+			Assert.Equal("INSERT INTO dbo.Test (Name, Salary) VALUES ('Pim', 50), ('Lindsey', 100)", result);
+		}
+
+		[Fact]
+		public void DeleteTest()
+		{
+			var sqlBuilder = new SqlBuilder()
+													 .Delete()
+													 .From("dbo.Test")
+													 .Where("Id = 1");
+
+			var result = sqlBuilder.ToSql();
+
+			Assert.Equal("DELETE FROM dbo.Test WHERE Id = 1", result);
+		}
+
+		[Fact]
+		public void DeleteJoinTest()
+		{
+			var sqlBuilder = new SqlBuilder()
+													.Delete("t")
+													.From("dbo.Test t")
+													.Join("dbo.Employee e on e.Id = t.EmployeeId")
+													.Where("e.Id = 1");
+
+			var result = sqlBuilder.ToSql();
+
+			Assert.Equal("DELETE t FROM dbo.Test t INNER JOIN dbo.Employee e on e.Id = t.EmployeeId WHERE e.Id = 1", result);
+		}
+	}
 }
