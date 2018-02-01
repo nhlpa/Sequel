@@ -2,4 +2,6 @@ sudo: false
 language: csharp
 solution: Cinch.SqlBuilder.sln
 script:
-  - xbuild /p:Configuration=Release ./Cinch.SqlBuilder.sln
+  - dotnet restore
+  - dotnet build -c Release
+  - dotnet test .\src\Cinch.SqlBuilder.Tests\
