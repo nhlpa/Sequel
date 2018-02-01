@@ -10,10 +10,10 @@
     <RepositoryUrl>https://github.com/pimbrouwers/Cinch.SqlBuilder</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
     <PackageTags>sql query querybuilder</PackageTags>
-    <Version>1.0.6</Version>
-    <AssemblyVersion>1.0.0.6</AssemblyVersion>
-    <FileVersion>1.0.0.6</FileVersion>
-    <PackageReleaseNotes>params for groupby having, orderby, where and whereor</PackageReleaseNotes>
+    <Version>1.0.7</Version>
+    <AssemblyVersion>1.0.0.7</AssemblyVersion>
+    <FileVersion>1.0.0.7</FileVersion>
+    <PackageReleaseNotes>delete support added</PackageReleaseNotes>
   </PropertyGroup>
 
 </Project>
