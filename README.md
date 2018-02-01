@@ -2,6 +2,7 @@
 Fluent SQL Server Query Builder. For in-depth use cases see the Cinch.SqlBuilder.Tests project.
 
 ![NuGet Version](https://img.shields.io/nuget/v/Cinch.SqlBuilder.svg)
+[![Build Status](https://travis-ci.org/pimbrouwers/sequel.svg?branch=master)](https://travis-ci.org/pimbrouwers/sequel)
 
 ## `SELECT` (uses default template)
 

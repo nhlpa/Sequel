@@ -1,7 +1,7 @@
-sudo: false
-language: csharp
-solution: Cinch.SqlBuilder.sln
-script:
-  - dotnet restore
-  - dotnet build -c Release
-  - dotnet test .\src\Cinch.SqlBuilder.Tests\
+language: csharp  
+mono: none  
+dotnet: 2.0.0  
+dist: trusty  
+script:  
+ - cd FlacLibSharp.Test.Core
+ - dotnet test
