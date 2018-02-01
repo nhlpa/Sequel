@@ -1,5 +1,5 @@
 sudo: false
 language: csharp
-solution: Cinch.sln
+solution: Cinch.SqlBuilder.sln
 script:
   - xbuild /p:Configuration=Release ./Cinch.SqlBuilder.sln
