@@ -2,6 +2,7 @@ language: csharp
 mono: none  
 dotnet: 2.0.0  
 dist: trusty  
-script:  
- - cd FlacLibSharp.Test.Core
- - dotnet test
+script:
+  - dotnet restore
+  - dotnet build -c Release
+  - dotnet test .\src\Cinch.SqlBuilder.Tests\
