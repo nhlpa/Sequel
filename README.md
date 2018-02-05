@@ -1,4 +1,4 @@
-# Cinch.SqlBuilder
+# sequel
 Fluent SQL Server Query Builder to make formulating dynamic SQL queries simpler.
 
 ![NuGet Version](https://img.shields.io/nuget/v/Cinch.SqlBuilder.svg)
