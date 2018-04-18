@@ -1,5 +1,5 @@
 # sequel
-Fluent SQL Server Query Builder to make formulating dynamic SQL queries simpler.
+[sequel](https://github.com/pimbrouwers/sequel) is an expressive SQL query builder, with syntax that emulates writing actual SQL queries.
 
 ![NuGet Version](https://img.shields.io/nuget/v/Cinch.SqlBuilder.svg)
 [![Build Status](https://travis-ci.org/pimbrouwers/sequel.svg?branch=master)](https://travis-ci.org/pimbrouwers/sequel)
