@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Cinch.SqlBuilder\Cinch.SqlBuilder.csproj" />
+    <ProjectReference Include="..\Cinch.SqlBuilder\Cinch.Sequel.csproj" />
   </ItemGroup>
 
 </Project>

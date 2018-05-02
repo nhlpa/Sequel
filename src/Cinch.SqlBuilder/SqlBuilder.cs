@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Cinch.SqlBuilder
+namespace Cinch.Sequel
 {
-  public class SqlBuilder : ISqlBuilder
+  public class SqlBuilder
   {
     private string template;
 
     private readonly IDictionary<string, string> templates = new Dictionary<string, string>()
     {
-      { "default", "||select|| ||from|| ||join|| ||where|| ||groupby|| ||having|| ||orderby||" },
+      { "select", "||select|| ||from|| ||join|| ||where|| ||groupby|| ||having|| ||orderby||" },
       { "insert", "||insert|| ||columns|| ||values||" },
       { "update", "||update|| ||set|| ||where||" },
       { "delete", "||delete|| ||from|| ||join|| ||where||" }
@@ -21,7 +21,7 @@ namespace Cinch.SqlBuilder
 
     public SqlBuilder()
     {
-      template = templates["default"];
+      template = templates["select"];
     }
 
     public SqlBuilder(string template)
@@ -46,88 +46,88 @@ namespace Cinch.SqlBuilder
       return template;
     }
 
-    public ISqlBuilder Columns(params string[] sql) =>
+    public SqlBuilder Columns(params string[] sql) =>
       AddClause("columns", sql, ", ", "(", ")");
 
-    public ISqlBuilder Exists(ISqlBuilder sqlBuilder) =>
+    public SqlBuilder Exists(SqlBuilder sqlBuilder) =>
       Where($"EXISTS ({sqlBuilder.ToSql()})");
 
-    public ISqlBuilder Exists(string sql) =>
+    public SqlBuilder Exists(string sql) =>
       Where($"EXISTS ({sql})");
 
-    public ISqlBuilder From(string sql) =>
+    public SqlBuilder From(string sql) =>
       AddClause("from", sql, null, "FROM ", null);
 
-    public ISqlBuilder From(ISqlBuilder sqlBuilder, string alias) =>
+    public SqlBuilder From(SqlBuilder sqlBuilder, string alias) =>
       AddClause("from", sqlBuilder.ToSql(), null, "FROM (", $") as {alias}");
 
-    public ISqlBuilder Delete()
+    public SqlBuilder Delete()
     {
       template = templates["delete"];
       return AddClause("delete", "", null, "DELETE ", null);
     }
 
-    public ISqlBuilder Delete(string sql)
+    public SqlBuilder Delete(string sql)
     {
       template = templates["delete"];
       return AddClause("delete", sql, null, "DELETE ", null);
     }
 
-    public ISqlBuilder GroupBy(params string[] sql) =>
+    public SqlBuilder GroupBy(params string[] sql) =>
       AddClause("groupby", sql, ", ", "GROUP BY ", null);
 
-    public ISqlBuilder Having(params string[] sql) =>
+    public SqlBuilder Having(params string[] sql) =>
       AddClause("having", sql, ", ", "HAVING ", null);
 
-    public ISqlBuilder Insert(string sql)
+    public SqlBuilder Insert(string sql)
     {
       template = templates["insert"];
       return AddClause("insert", sql, null, "INSERT INTO ", null);
     }
 
-    public ISqlBuilder Join(string sql) =>
+    public SqlBuilder Join(string sql) =>
       AddClause("join", sql, " INNER JOIN ", null, null, false);
 
-    public ISqlBuilder LeftJoin(string sql) =>
+    public SqlBuilder LeftJoin(string sql) =>
       AddClause("join", sql, " LEFT JOIN ", null, null, false);
 
-    public ISqlBuilder OrderBy(params string[] sql) =>
+    public SqlBuilder OrderBy(params string[] sql) =>
       AddClause("orderby", sql, ", ", "ORDER BY ", null);
 
-    public ISqlBuilder OrderByDesc(string sql) =>
+    public SqlBuilder OrderByDesc(string sql) =>
       AddClause("orderby", sql.IndexOf("desc", StringComparison.OrdinalIgnoreCase) > -1 ? sql : $"{sql} DESC", ", ", "ORDER BY ", null);
 
-    public ISqlBuilder Select(params string[] sql) =>
+    public SqlBuilder Select(params string[] sql) =>
       AddClause("select", sql, ", ", "SELECT ", null);
 
-    public ISqlBuilder SelectTop(int n, params string[] sql) =>
+    public SqlBuilder SelectTop(int n, params string[] sql) =>
       AddClause("select", sql, ", ", $"SELECT TOP {n} ", null);
 
-    public ISqlBuilder Set(params string[] sql) =>
+    public SqlBuilder Set(params string[] sql) =>
       AddClause("set", sql, ", ", "SET ", null);
 
-    public ISqlBuilder Update(string sql)
+    public SqlBuilder Update(string sql)
     {
       template = templates["update"];
       return AddClause("update", sql, null, "UPDATE ", null);
     }
 
-    public ISqlBuilder Value(params string[] sql) =>
+    public SqlBuilder Value(params string[] sql) =>
       AddClause("values", sql, ", ", "VALUES (", ")");
 
-    public ISqlBuilder Values(params string[] sql) =>
+    public SqlBuilder Values(params string[] sql) =>
       AddClause("values", sql, "), (", "VALUES (", ")");
 
-    public ISqlBuilder Where(params string[] sql) =>
+    public SqlBuilder Where(params string[] sql) =>
       AddClause("where", string.Join(" AND ", sql), " AND ", "WHERE ", null);
 
-    public ISqlBuilder WhereOr(params string[] sql) =>
+    public SqlBuilder WhereOr(params string[] sql) =>
       AddClause("where", string.Join(" OR ", sql), " OR ", "WHERE ", null);
 
-    private ISqlBuilder AddClause(string keyword, string[] sql, string glue, string pre, string post, bool singular = true) =>
+    private SqlBuilder AddClause(string keyword, string[] sql, string glue, string pre, string post, bool singular = true) =>
       AddClause(keyword, string.Join(", ", sql), glue, pre, post, singular);
 
-    private ISqlBuilder AddClause(string keyword, string sql, string glue, string pre, string post, bool singular = true)
+    private SqlBuilder AddClause(string keyword, string sql, string glue, string pre, string post, bool singular = true)
     {
       if (!clauses.TryGetValue(keyword, out SqlClauseSet clauseSet))
       {
