@@ -64,7 +64,7 @@ DELETE FROM dbo.Test WHERE EmployeeId = 1
 */
 ```
 
-## Custom Template
+## Templating
 
 [sequel](https://github.com/pimbrouwers/sequel) has built-in templates to support the actions listed above, but also supports custom templating for edge cases. To formulate the SQL string, [sequel](https://github.com/pimbrouwers/sequel) uses `||` delimiters surrounding the following keywords:
 
@@ -82,18 +82,20 @@ DELETE FROM dbo.Test WHERE EmployeeId = 1
 - `||set||`
 - `||delete||`
 
-The default templates are as follows:
+To use `SqlBuilder` with a custom template, provide the template when constructing `new SqlBuilder("YOUR CUSTOM TEMPLATE")`.
 
-### Select
+### The default templates are as follows:
+
+#### Select
 `||select|| ||from|| ||join|| ||where|| ||groupby|| ||having|| ||orderby||`
 
-### Insert
+#### Insert
 `||insert|| ||columns|| ||values||`
 
-### Update
+#### Update
 `||update|| ||set|| ||where||`
 
-### Delete
+#### Delete
 `||delete|| ||from|| ||join|| ||where||`
 
 ## Usage with [dapper.net](https://github.com/StackExchange/Dapper)
