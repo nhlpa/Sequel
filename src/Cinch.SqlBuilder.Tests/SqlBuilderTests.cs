@@ -130,32 +130,6 @@ namespace Cinch.SqlBuilder.Tests
     }
 
     [Fact]
-    public void SelectTopMultipleParamsTest()
-    {
-      var sqlBuilder = new SqlBuilder()
-                           .SelectTop(2, "Id", "Salary")
-                           .From("dbo.Test");
-
-      var result = sqlBuilder.ToSql();
-
-      Assert.Equal("SELECT TOP 2 Id, Salary FROM dbo.Test", result);
-    }
-
-    //[Fact]
-    //public void SelectTopMultipleParamsTestChangeAfter()
-    //{
-    //  var sqlBuilder = new SqlBuilder()
-    //                       .Select("Id", "Salary")
-    //                       .From("dbo.Test");
-
-    //  sqlBuilder.SelectTop(2, "Id", "Salary");
-
-    //  var result = sqlBuilder.ToSql();
-
-    //  Assert.Equal("SELECT TOP 2 Id, Salary FROM dbo.Test", result);
-    //}
-
-    [Fact]
     public void SelectGroupByTest()
     {
       var sqlBuilder = new SqlBuilder()
@@ -250,18 +224,6 @@ namespace Cinch.SqlBuilder.Tests
       var result = sqlBuilder.ToSql();
 
       Assert.Equal("SELECT * FROM dbo.Test ORDER BY Id, Salary DESC", result);
-    }
-
-    [Fact]
-    public void SelectTopTest()
-    {
-      var sqlBuilder = new SqlBuilder()
-                           .SelectTop(1, "*")
-                           .From("dbo.Test");
-
-      var result = sqlBuilder.ToSql();
-
-      Assert.Equal("SELECT TOP 1 * FROM dbo.Test", result);
     }
 
     [Fact]

@@ -11,7 +11,7 @@ namespace Cinch.SqlBuilder
 
     private readonly IDictionary<string, string> templates = new Dictionary<string, string>()
     {
-      { "default", "||select|| ||top|| ||from|| ||join|| ||where|| ||groupby|| ||having|| ||orderby||" },
+      { "default", "||select|| ||from|| ||join|| ||where|| ||groupby|| ||having|| ||orderby||" },
       { "insert", "||insert|| ||columns|| ||values||" },
       { "update", "||update|| ||set|| ||where||" },
       { "delete", "||delete|| ||from|| ||join|| ||where||" }
@@ -129,13 +129,13 @@ namespace Cinch.SqlBuilder
 
     private ISqlBuilder AddClause(string keyword, string sql, string glue, string pre, string post, bool singular = true)
     {
-      if (!clauses.TryGetValue(keyword, out SqlClauseSet _clauses))
+      if (!clauses.TryGetValue(keyword, out SqlClauseSet clauseSet))
       {
-        _clauses = new SqlClauseSet(glue, pre, post, singular);
-        clauses[keyword] = _clauses;
+        clauseSet = new SqlClauseSet(glue, pre, post, singular);
+        clauses[keyword] = clauseSet;
       }
 
-      _clauses.Add(new SqlClause(sql, singular ? null : glue));
+      clauseSet.Add(new SqlClause(sql, singular ? null : glue));
 
       return this;
     }
@@ -161,7 +161,7 @@ namespace Cinch.SqlBuilder
 
         if (string.IsNullOrWhiteSpace(Glue))
         {
-          sql = this.FirstOrDefault().Sql;
+          sql = this.LastOrDefault().Sql;
         }
         else if (!Singular)
         {

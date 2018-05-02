@@ -2,18 +2,22 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Description>Makes building dynamic SQL Server Queries easier.</Description>
-    <Copyright>2017</Copyright>
+    <Description>Makes building dynamic SQL Queries easier.</Description>
+    <Copyright>2018</Copyright>
     <PackageLicenseUrl>https://github.com/pimbrouwers/Cinch.SqlBuilder/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/pimbrouwers/Cinch.SqlBuilder/blob/master/README.md</PackageProjectUrl>
     <PackageIconUrl>http://www.pimbrouwers.com/cinch.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/pimbrouwers/Cinch.SqlBuilder</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
-    <PackageTags>sql query querybuilder</PackageTags>
-    <Version>1.0.7</Version>
-    <AssemblyVersion>1.0.0.7</AssemblyVersion>
-    <FileVersion>1.0.0.7</FileVersion>
-    <PackageReleaseNotes>delete support added</PackageReleaseNotes>
+    <PackageTags>sql query querybuilder fluentquerybuilder</PackageTags>
+    <Version>1.0.8</Version>
+    <AssemblyVersion>1.0.0.8</AssemblyVersion>
+    <FileVersion>1.0.0.8</FileVersion>
+    <PackageReleaseNotes>Explicit SelectTop() removed</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <Optimize>false</Optimize>
   </PropertyGroup>
 
 </Project>

@@ -38,8 +38,6 @@ namespace Cinch.SqlBuilder
 
     ISqlBuilder Select(params string[] sql);
 
-    ISqlBuilder SelectTop(int n, params string[] sql);
-
     ISqlBuilder Set(params string[] sql);
 
     ISqlBuilder Update(string sql);
