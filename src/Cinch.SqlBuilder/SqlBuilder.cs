@@ -135,18 +135,7 @@ namespace Cinch.SqlBuilder
         clauses[keyword] = _clauses;
       }
 
-      SqlClause clause;
-
-      if (singular)
-      {
-        clause = new SqlClause(sql);
-      }
-      else
-      {
-        clause = new SqlClause(sql, glue);
-      }
-
-      _clauses.Add(clause);
+      _clauses.Add(new SqlClause(sql, singular ? null : glue));
 
       return this;
     }
@@ -189,14 +178,13 @@ namespace Cinch.SqlBuilder
 
     private class SqlClause
     {
-      public SqlClause(string sql)
-      {
-        Sql = sql;
-      }
-
       public SqlClause(string sql, string glue)
       {
-        Glue = glue;
+        if (!string.IsNullOrWhiteSpace(glue))
+        {
+          Glue = glue;
+        }
+
         Sql = sql;
       }
 

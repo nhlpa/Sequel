@@ -141,6 +141,20 @@ namespace Cinch.SqlBuilder.Tests
       Assert.Equal("SELECT TOP 2 Id, Salary FROM dbo.Test", result);
     }
 
+    //[Fact]
+    //public void SelectTopMultipleParamsTestChangeAfter()
+    //{
+    //  var sqlBuilder = new SqlBuilder()
+    //                       .Select("Id", "Salary")
+    //                       .From("dbo.Test");
+
+    //  sqlBuilder.SelectTop(2, "Id", "Salary");
+
+    //  var result = sqlBuilder.ToSql();
+
+    //  Assert.Equal("SELECT TOP 2 Id, Salary FROM dbo.Test", result);
+    //}
+
     [Fact]
     public void SelectGroupByTest()
     {
