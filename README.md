@@ -1,7 +1,7 @@
 # sequel
 [sequel](https://github.com/pimbrouwers/sequel) is an expressive SQL query builder, with syntax that emulates writing actual SQL queries.
 
-![NuGet Version](https://img.shields.io/nuget/v/Cinch.SqlBuilder.svg)
+![NuGet Version](https://img.shields.io/nuget/v/Sequel.svg)
 [![Build Status](https://travis-ci.org/pimbrouwers/sequel.svg?branch=master)](https://travis-ci.org/pimbrouwers/sequel)
 
 ## Basic Usage
