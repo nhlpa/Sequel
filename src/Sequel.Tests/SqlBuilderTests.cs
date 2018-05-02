@@ -1,6 +1,6 @@
 ﻿using Xunit;
 
-namespace Cinch.Sequel.Tests
+namespace Sequel.Tests
 {
   public class SqlBuilderTests
   {

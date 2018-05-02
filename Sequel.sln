@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2020
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cinch.Sequel", "src\Cinch.SqlBuilder\Cinch.Sequel.csproj", "{A93063E6-31BE-4CF9-A8A9-40C092ACE751}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sequel", "src\Sequel\Sequel.csproj", "{A93063E6-31BE-4CF9-A8A9-40C092ACE751}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cinch.Sequel.Tests", "src\Cinch.SqlBuilder.Tests\Cinch.Sequel.Tests.csproj", "{C0322AA2-86BE-41E6-BEAA-75698BB05EA3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sequel.Tests", "src\Sequel.Tests\Sequel.Tests.csproj", "{C0322AA2-86BE-41E6-BEAA-75698BB05EA3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CC15F59A-088C-462D-8835-EB91AD5CCA54}"
 	ProjectSection(SolutionItems) = preProject

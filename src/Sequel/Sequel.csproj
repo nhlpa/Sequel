@@ -4,18 +4,20 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Description>Makes building dynamic SQL Queries easier.</Description>
     <Copyright>2018</Copyright>
-    <PackageLicenseUrl>https://github.com/pimbrouwers/Cinch.SqlBuilder/blob/master/LICENSE</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/pimbrouwers/Cinch.SqlBuilder/blob/master/README.md</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/pimbrouwers/sequel/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/pimbrouwers/sequel/blob/master/README.md</PackageProjectUrl>
     <PackageIconUrl>http://www.pimbrouwers.com/cinch.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/pimbrouwers/Cinch.SqlBuilder</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
     <PackageTags>sql query querybuilder fluentquerybuilder</PackageTags>
-    <Version>1.0.9</Version>
-    <AssemblyVersion>1.0.0.9</AssemblyVersion>
-    <FileVersion>1.0.0.8</FileVersion>
-    <PackageReleaseNotes>Explicit SelectTop() removed</PackageReleaseNotes>
-    <PackageId>Cinch.SqlBuilder</PackageId>
-    <Company>Cinch.SqlBuilder</Company>
+    <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <PackageReleaseNotes></PackageReleaseNotes>
+    <PackageId>Sequel</PackageId>
+    <Company></Company>
+    <Authors>Pim Brouwers</Authors>
+    <Product>Sequel</Product>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
