@@ -11,7 +11,7 @@ namespace Sequel
 
     private readonly IDictionary<string, string> templates = new Dictionary<string, string>()
     {
-      { "select", "||select|| ||from|| ||join|| ||where|| ||groupby|| ||having|| ||orderby||" },
+      { "select", "||select|| ||top|| ||fields|| ||from|| ||join|| ||where|| ||groupby|| ||having|| ||orderby|| ||limit||" },
       { "insert", "||insert|| ||columns|| ||values||" },
       { "update", "||update|| ||set|| ||where||" },
       { "delete", "||delete|| ||from|| ||join|| ||where||" }
@@ -91,20 +91,26 @@ namespace Sequel
     public SqlBuilder LeftJoin(string sql) =>
       AddClause("join", sql, " LEFT JOIN ", null, null, false);
 
+    public SqlBuilder Limit(int n) =>
+      AddClause("limit", n.ToString(), null, "LIMIT ", null, true);
+
     public SqlBuilder OrderBy(params string[] sql) =>
       AddClause("orderby", sql, ", ", "ORDER BY ", null);
 
     public SqlBuilder OrderByDesc(string sql) =>
       AddClause("orderby", sql.IndexOf("desc", StringComparison.OrdinalIgnoreCase) > -1 ? sql : $"{sql} DESC", ", ", "ORDER BY ", null);
 
-    public SqlBuilder Select(params string[] sql) =>
-      AddClause("select", sql, ", ", "SELECT ", null);
-
-    public SqlBuilder SelectTop(int n, params string[] sql) =>
-      AddClause("select", sql, ", ", $"SELECT TOP {n} ", null);
+    public SqlBuilder Select(params string[] sql)
+    {
+      AddClause("select", string.Empty, string.Empty, "SELECT ", null);
+      return AddClause("fields", sql, ", ", null, null);
+    }
 
     public SqlBuilder Set(params string[] sql) =>
       AddClause("set", sql, ", ", "SET ", null);
+
+    public SqlBuilder Top(int n) =>
+      AddClause("top", n.ToString(), null, "TOP ", null, true);
 
     public SqlBuilder Update(string sql)
     {

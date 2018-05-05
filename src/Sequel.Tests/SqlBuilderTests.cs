@@ -25,6 +25,32 @@ namespace Sequel.Tests
     }
 
     [Fact]
+    public void SelectStarTopTest()
+    {
+      var sqlBuilder = new SqlBuilder()
+                           .Select("*")
+                           .Top(5)
+                           .From("dbo.Test");
+
+      var result = sqlBuilder.ToSql();
+
+      Assert.Equal("SELECT TOP 5 * FROM dbo.Test", result);
+    }
+
+    [Fact]
+    public void SelectStarLimitTest()
+    {
+      var sqlBuilder = new SqlBuilder()
+                           .Select("*")
+                           .From("dbo.Test")
+                           .Limit(5);
+
+      var result = sqlBuilder.ToSql();
+
+      Assert.Equal("SELECT * FROM dbo.Test LIMIT 5", result);
+    }
+
+    [Fact]
     public void SelectStarWhereTest()
     {
       var sqlBuilder = new SqlBuilder()
