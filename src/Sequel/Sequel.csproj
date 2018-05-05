@@ -7,10 +7,10 @@
     <PackageLicenseUrl>https://github.com/pimbrouwers/sequel/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/pimbrouwers/sequel/blob/master/README.md</PackageProjectUrl>
     <PackageIconUrl>http://www.pimbrouwers.com/cinch.png</PackageIconUrl>
-    <RepositoryUrl>https://github.com/pimbrouwers/Cinch.SqlBuilder</RepositoryUrl>
+    <RepositoryUrl>https://github.com/pimbrouwers/sequel</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
     <PackageTags>sql query querybuilder fluentquerybuilder</PackageTags>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
     <PackageReleaseNotes></PackageReleaseNotes>
