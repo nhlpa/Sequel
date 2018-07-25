@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Sequel
 {
-  public class SqlBuilder
+  public class SqlBuilder : ISqlBuilder
   {
     private string template;
 
@@ -97,8 +97,8 @@ namespace Sequel
     public SqlBuilder OrderBy(params string[] sql) =>
       AddClause("orderby", sql, ", ", "ORDER BY ", null);
 
-    public SqlBuilder OrderByDesc(string sql) =>
-      AddClause("orderby", sql.IndexOf("desc", StringComparison.OrdinalIgnoreCase) > -1 ? sql : $"{sql} DESC", ", ", "ORDER BY ", null);
+    public SqlBuilder OrderByDesc(params string[] sql) =>
+      AddClause("orderby", sql.Select(s => $"{s} DESC"), ", ", "ORDER BY ", null);
 
     public SqlBuilder Select(params string[] sql)
     {
@@ -130,7 +130,7 @@ namespace Sequel
     public SqlBuilder WhereOr(params string[] sql) =>
       AddClause("where", string.Join(" OR ", sql), " OR ", "WHERE ", null);
 
-    private SqlBuilder AddClause(string keyword, string[] sql, string glue, string pre, string post, bool singular = true) =>
+    private SqlBuilder AddClause(string keyword, IEnumerable<string> sql, string glue, string pre, string post, bool singular = true) =>
       AddClause(keyword, string.Join(", ", sql), glue, pre, post, singular);
 
     private SqlBuilder AddClause(string keyword, string sql, string glue, string pre, string post, bool singular = true)
