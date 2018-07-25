@@ -5,7 +5,7 @@
     <Description>Makes building dynamic SQL Queries easier.</Description>
     <Copyright>2018</Copyright>
     <PackageLicenseUrl>https://github.com/pimbrouwers/sequel/blob/master/LICENSE</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/pimbrouwers/sequel/blob/master/README.md</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/pimbrouwers/sequel</PackageProjectUrl>
     <PackageIconUrl>http://www.pimbrouwers.com/cinch.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/pimbrouwers/sequel</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
