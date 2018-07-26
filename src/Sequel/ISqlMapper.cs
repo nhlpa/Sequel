@@ -10,7 +10,12 @@
     /// <summary>
     /// Primary key column name
     /// </summary>
-    object Key { get; }
+    string Key { get; }
+
+    /// <summary>
+    /// Primary key column name prefixed with {Table}
+    /// </summary>
+    string KeyQualified { get; }
 
     /// <summary>
     /// All column names
@@ -18,7 +23,7 @@
     string[] Fields { get; }
 
     /// <summary>
-    /// All column names prefixed with Table
+    /// All column names prefixed with {Table}
     /// </summary>
     string[] FieldsQualified { get; }
 
@@ -28,7 +33,7 @@
     string[] NonKeyFields { get; }
 
     /// <summary>
-    /// Column names excluding Key prefixed with Table
+    /// Column names excluding Key prefixed with {Table}
     /// </summary>
     string[] NonKeyFieldsQualified { get; }
 

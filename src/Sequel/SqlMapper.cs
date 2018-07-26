@@ -18,8 +18,11 @@ namespace Sequel
     public virtual string Table
       => EntityType.Name;
 
-    public virtual object Key =>
+    public virtual string Key =>
       "Id";
+
+    public virtual string KeyQualified =>
+      $"{Table}.{Key}";
 
     public virtual string[] Fields =>
       fields ?? (fields = Members.Select(p => p.Name).ToArray());

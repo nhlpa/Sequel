@@ -10,10 +10,10 @@
     <RepositoryUrl>https://github.com/pimbrouwers/sequel</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
     <PackageTags>sql query querybuilder fluentquerybuilder</PackageTags>
-    <Version>1.0.3</Version>
+    <Version>1.0.4</Version>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
-    <PackageReleaseNotes>SqlMapper added</PackageReleaseNotes>
+    <PackageReleaseNotes>Qualified key, fields, nonkeyfields added to SqlMapper</PackageReleaseNotes>
     <PackageId>Sequel</PackageId>
     <Company></Company>
     <Authors>Pim Brouwers</Authors>

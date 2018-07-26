@@ -29,8 +29,27 @@ namespace Sequel.Tests
       [Fact]
       public void Key_should_equal_Id()
       {
+        //Arrange
+        var expected = "Id";
+
+        //Act
+        var key = sqlMapper.Key;
+
         //Assert
-        Assert.Equal("Id", sqlMapper.Key);
+        Assert.Equal(expected, key);
+      }
+
+      [Fact]
+      public void Key_qualified_should_equal_Id_MockEntity_prefix()
+      {
+        //Arrange
+        var expected = "MockEntity.Id";
+
+        //Act
+        var key = sqlMapper.KeyQualified;
+
+        //Assert
+        Assert.Equal(expected, key);
       }
     }
 
@@ -48,6 +67,19 @@ namespace Sequel.Tests
         //Assert
         Assert.Equal(expected.OrderBy(e => e), fields.OrderBy(f => f));
       }
+
+      [Fact]
+      public void Fields_qualified_should_equal_Id_Name_Cents_MockEntity_prefix()
+      {
+        //Arrange
+        var expected = new string[] { "MockEntity.Id", "MockEntity.Name", "MockEntity.Cents" };
+
+        //Act
+        var fields = sqlMapper.FieldsQualified;
+
+        //Assert
+        Assert.Equal(expected.OrderBy(e => e), fields.OrderBy(f => f));
+      }
     }
 
     public class NonKeyFields : SqlMapperTest
@@ -60,6 +92,19 @@ namespace Sequel.Tests
 
         //Act
         var nonKeyFields = sqlMapper.NonKeyFields;
+
+        //Assert
+        Assert.Equal(expected.OrderBy(e => e), nonKeyFields.OrderBy(n => n));
+      }
+
+      [Fact]
+      public void Nonkeyfields_qualified_should_equal_Name_Cents_MockEntity_prefix()
+      {
+        //Arrange
+        var expected = new string[] { "MockEntity.Name", "MockEntity.Cents" };
+
+        //Act
+        var nonKeyFields = sqlMapper.NonKeyFieldsQualified;
 
         //Assert
         Assert.Equal(expected.OrderBy(e => e), nonKeyFields.OrderBy(n => n));
