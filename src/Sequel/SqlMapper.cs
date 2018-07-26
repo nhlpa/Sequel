@@ -24,8 +24,14 @@ namespace Sequel
     public virtual string[] Fields =>
       fields ?? (fields = Members.Select(p => p.Name).ToArray());
 
+    public virtual string[] FieldsQualified =>
+      Fields.Select(f => $"{Table}.{f}").ToArray();
+
     public virtual string[] NonKeyFields =>
       nonKeyFields ?? (nonKeyFields = Fields.Where(f => !string.Equals(f, $"{Key}", StringComparison.OrdinalIgnoreCase)).ToArray());
+
+    public virtual string[] NonKeyFieldsQualified =>
+      NonKeyFields.Select(f => $"{Table}.{f}").ToArray();
 
     public virtual SqlBuilder CreateSql
     {
@@ -43,7 +49,7 @@ namespace Sequel
       get
       {
         return new SqlBuilder()
-        .Select(Fields)
+        .Select(FieldsQualified)
         .From(Table);
       }
     }
@@ -68,6 +74,40 @@ namespace Sequel
         .From(Table)
         .Where($"{Key} = @{Key}");
       }
+    }
+
+    public SqlBuilder PageSql(int n, object since = null, string order = "asc")
+    {
+      var sqlBuilder = ReadSql.Top(n);
+
+      //pagination
+      if (since != null)
+      {
+        if (string.Equals(order, "desc", StringComparison.OrdinalIgnoreCase))
+        {
+          sqlBuilder
+            .Where($"{Table}.{Key} < @{Key}");
+        }
+        else
+        {
+          sqlBuilder
+            .Where($"{Table}.{Key} > @{Key}");
+        }
+      }
+
+      //sort
+      if (string.Equals(order, "desc", StringComparison.OrdinalIgnoreCase))
+      {
+        sqlBuilder
+          .OrderByDesc($"{Table}.{Key}");
+      }
+      else
+      {
+        sqlBuilder
+          .OrderBy($"{Table}.{Key}");
+      }
+
+      return sqlBuilder;
     }
 
     private Type EntityType =>

@@ -88,7 +88,7 @@ namespace Sequel.Tests
       public void Should_be_valid_sql_select_statement()
       {
         //Arrange
-        var expected = "SELECT Cents, Id, Name FROM MockEntity";
+        var expected = "SELECT MockEntity.Cents, MockEntity.Id, MockEntity.Name FROM MockEntity";
 
         //Act
         var readSql = sqlMapper.ReadSql.ToSql();
@@ -127,6 +127,61 @@ namespace Sequel.Tests
 
         //Assert
         Assert.Equal(expected, deleteSql);
+      }
+    }
+
+    public class PageSql : SqlMapperTest
+    {
+      [Fact]
+      public void Should_be_valid_top5_sql_keyset_pagination_statement()
+      {
+        //Arrange
+        var expected = "SELECT TOP 5 MockEntity.Cents, MockEntity.Id, MockEntity.Name FROM MockEntity ORDER BY MockEntity.Id";
+
+        //Act
+        var readSql = sqlMapper.PageSql(5).ToSql();
+
+        //Assert
+        Assert.Equal(expected, readSql);
+      }
+
+      [Fact]
+      public void Should_be_valid_top5_desc_sql_keyset_pagination_statement()
+      {
+        //Arrange
+        var expected = "SELECT TOP 5 MockEntity.Cents, MockEntity.Id, MockEntity.Name FROM MockEntity ORDER BY MockEntity.Id DESC";
+
+        //Act
+        var readSql = sqlMapper.PageSql(5, order: "desc").ToSql();
+
+        //Assert
+        Assert.Equal(expected, readSql);
+      }
+
+      [Fact]
+      public void Should_be_valid_top5_gt1_sql_keyset_pagination_statement()
+      {
+        //Arrange
+        var expected = "SELECT TOP 5 MockEntity.Cents, MockEntity.Id, MockEntity.Name FROM MockEntity WHERE MockEntity.Id > @Id ORDER BY MockEntity.Id";
+
+        //Act
+        var readSql = sqlMapper.PageSql(5, 1).ToSql();
+
+        //Assert
+        Assert.Equal(expected, readSql);
+      }
+
+      [Fact]
+      public void Should_be_valid_top5_gt1_desc_sql_keyset_pagination_statement()
+      {
+        //Arrange
+        var expected = "SELECT TOP 5 MockEntity.Cents, MockEntity.Id, MockEntity.Name FROM MockEntity WHERE MockEntity.Id < @Id ORDER BY MockEntity.Id DESC";
+
+        //Act
+        var readSql = sqlMapper.PageSql(5, 1, "desc").ToSql();
+
+        //Assert
+        Assert.Equal(expected, readSql);
       }
     }
 
