@@ -76,40 +76,6 @@ namespace Sequel
       }
     }
 
-    public SqlBuilder PageSql(int n, object since = null, string order = "asc")
-    {
-      var sqlBuilder = ReadSql.Top(n);
-
-      //pagination
-      if (since != null)
-      {
-        if (string.Equals(order, "desc", StringComparison.OrdinalIgnoreCase))
-        {
-          sqlBuilder
-            .Where($"{Table}.{Key} < @{Key}");
-        }
-        else
-        {
-          sqlBuilder
-            .Where($"{Table}.{Key} > @{Key}");
-        }
-      }
-
-      //sort
-      if (string.Equals(order, "desc", StringComparison.OrdinalIgnoreCase))
-      {
-        sqlBuilder
-          .OrderByDesc($"{Table}.{Key}");
-      }
-      else
-      {
-        sqlBuilder
-          .OrderBy($"{Table}.{Key}");
-      }
-
-      return sqlBuilder;
-    }
-
     private Type EntityType =>
       entityType ?? (entityType = typeof(TEntity));
 

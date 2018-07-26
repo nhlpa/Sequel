@@ -54,15 +54,5 @@
     /// Sets parameter @{Key}
     /// </summary>
     SqlBuilder DeleteSql { get; }
-
-    /// <summary>
-    /// Keyset Pagination
-    /// Sets parameter @{Key}
-    /// </summary>
-    /// <param name="n"></param>
-    /// <param name="since"></param>
-    /// <param name="order"></param>
-    /// <returns></returns>
-    SqlBuilder PageSql(int n, object since = null, string order = "asc");
   }
 }
