@@ -22,6 +22,16 @@ namespace Sequel.Tests
         //Assert
         Assert.Equal("MockEntity", sqlMapper.Table);
       }
+
+      [Fact]
+      public void Table_should_equal_MockEntities()
+      {
+        //Arrange
+        var m = new SqlMapper<MockEntity>("MockEntities");
+
+        //Assert
+        Assert.Equal("MockEntities", m.Table);
+      }
     }
 
     public class Key : SqlMapperTest
@@ -37,6 +47,16 @@ namespace Sequel.Tests
 
         //Assert
         Assert.Equal(expected, key);
+      }
+
+      [Fact]
+      public void Key_should_equal_Code()
+      {
+        //Arrange
+        var m = new SqlMapper<MockEntity>(key: "Code");
+
+        //Assert
+        Assert.Equal("Code", m.Key);
       }
 
       [Fact]
@@ -63,6 +83,20 @@ namespace Sequel.Tests
 
         //Act
         var fields = sqlMapper.Fields;
+
+        //Assert
+        Assert.Equal(expected.OrderBy(e => e), fields.OrderBy(f => f));
+      }
+
+      [Fact]
+      public void Fields_should_equal_Id_Cents()
+      {
+        //Arrange
+        var expected = new string[] { "Id", "Cents" };
+        var m = new SqlMapper<MockEntity>(fields: expected);
+
+        //Act
+        var fields = m.Fields;
 
         //Assert
         Assert.Equal(expected.OrderBy(e => e), fields.OrderBy(f => f));

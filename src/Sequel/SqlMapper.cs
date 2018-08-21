@@ -11,15 +11,38 @@ namespace Sequel
     private Type entityType;
     private TypeAccessor entityTypeAccessor;
     private IEnumerable<Member> members;
-
+    private string table;
+    private string key;
     private string[] fields;
     private string[] nonKeyFields;
 
-    public virtual string Table
-      => EntityType.Name;
+    public SqlMapper()
+    {
+    }
+
+    public SqlMapper(string table = null, string key = null, string[] fields = null)
+    {
+      if (!string.IsNullOrWhiteSpace(table))
+      {
+        this.table = table;
+      }
+
+      if (!string.IsNullOrWhiteSpace(key))
+      {
+        this.key = key;
+      }
+
+      if (fields != null && fields.Any())
+      {
+        this.fields = fields;
+      }
+    }
+
+    public virtual string Table =>
+      table ?? (table = EntityType.Name);
 
     public virtual string Key =>
-      "Id";
+      key ?? (key = "Id");
 
     public virtual string KeyQualified =>
       $"{Table}.{Key}";
