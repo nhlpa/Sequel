@@ -10,10 +10,10 @@
     <RepositoryUrl>https://github.com/pimbrouwers/sequel</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
     <PackageTags>sql query querybuilder fluentquerybuilder</PackageTags>
-    <Version>1.0.5</Version>
+    <Version>1.0.6</Version>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
-    <PackageReleaseNotes>SqlMapper&lt;TEntity&gt; runtime table, key &amp; fields configuration through constructor.</PackageReleaseNotes>
+    <PackageReleaseNotes>SelectWithAlias and code <summary></summary> added</PackageReleaseNotes>
     <PackageId>Sequel</PackageId>
     <Company></Company>
     <Authors>Pim Brouwers</Authors>

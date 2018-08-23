@@ -19,21 +19,36 @@ namespace Sequel
 
     private readonly IDictionary<string, SqlClauseSet> clauses = new Dictionary<string, SqlClauseSet>();
 
+    /// <summary>
+    /// Using default templates
+    /// </summary>
     public SqlBuilder()
     {
       template = templates["select"];
     }
 
+    /// <summary>
+    /// Using custom template
+    /// </summary>
+    /// <param name="template"></param>
     public SqlBuilder(string template)
     {
       this.template = template;
     }
 
+    /// <summary>
+    /// Render SQL statement as string
+    /// </summary>
+    /// <returns></returns>
     public override string ToString()
     {
       return ToSql();
     }
 
+    /// <summary>
+    /// Render SQL statement as string
+    /// </summary>
+    /// <returns></returns>
     public string ToSql()
     {
       foreach (var clauseSet in clauses)
@@ -46,89 +61,217 @@ namespace Sequel
       return template;
     }
 
-    public SqlBuilder Columns(params string[] sql) =>
-      AddClause("columns", sql, ", ", "(", ")");
+    /// <summary>
+    /// Register columns for INSERT
+    /// </summary>
+    /// <param name="columns"></param>
+    /// <returns></returns>
+    public SqlBuilder Columns(params string[] columns) =>
+      AddClause("columns", columns, ", ", "(", ")");
 
+    /// <summary>
+    /// EXISTS predicate subquery
+    /// </summary>
+    /// <param name="sqlBuilder"></param>
+    /// <returns></returns>
     public SqlBuilder Exists(SqlBuilder sqlBuilder) =>
       Where($"EXISTS ({sqlBuilder.ToSql()})");
 
-    public SqlBuilder Exists(string sql) =>
-      Where($"EXISTS ({sql})");
+    /// <summary>
+    /// EXISTS predicate
+    /// </summary>
+    /// <param name="predicate"></param>
+    /// <returns></returns>
+    public SqlBuilder Exists(string predicate) =>
+      Where($"EXISTS ({predicate})");
 
-    public SqlBuilder From(string sql) =>
-      AddClause("from", sql, null, "FROM ", null);
+    /// <summary>
+    /// FROM table
+    /// </summary>
+    /// <param name="table"></param>
+    /// <returns></returns>
+    public SqlBuilder From(string table) =>
+      AddClause("from", table, null, "FROM ", null);
 
-    public SqlBuilder From(SqlBuilder sqlBuilder, string alias) =>
-      AddClause("from", sqlBuilder.ToSql(), null, "FROM (", $") as {alias}");
+    /// <summary>
+    /// FROM derived table
+    /// </summary>
+    /// <param name="derivedTable"></param>
+    /// <param name="alias"></param>
+    /// <returns></returns>
+    public SqlBuilder From(SqlBuilder derivedTable, string alias) =>
+      AddClause("from", derivedTable.ToSql(), null, "FROM (", $") as {alias}");
 
+    /// <summary>
+    /// DELETE clause
+    /// </summary>
+    /// <returns></returns>
     public SqlBuilder Delete()
     {
       template = templates["delete"];
       return AddClause("delete", "", null, "DELETE ", null);
     }
 
-    public SqlBuilder Delete(string sql)
+    /// <summary>
+    /// DELETE from alias
+    /// </summary>
+    /// <param name="alias"></param>
+    /// <returns></returns>
+    public SqlBuilder Delete(string alias)
     {
       template = templates["delete"];
-      return AddClause("delete", sql, null, "DELETE ", null);
+      return AddClause("delete", alias, null, "DELETE ", null);
     }
 
-    public SqlBuilder GroupBy(params string[] sql) =>
-      AddClause("groupby", sql, ", ", "GROUP BY ", null);
+    /// <summary>
+    /// GROUP BY columns
+    /// </summary>
+    /// <param name="columns"></param>
+    /// <returns></returns>
+    public SqlBuilder GroupBy(params string[] columns) =>
+      AddClause("groupby", columns, ", ", "GROUP BY ", null);
 
-    public SqlBuilder Having(params string[] sql) =>
-      AddClause("having", sql, ", ", "HAVING ", null);
+    /// <summary>
+    /// HAVING predicates
+    /// </summary>
+    /// <param name="predicate"></param>
+    /// <returns></returns>
+    public SqlBuilder Having(params string[] predicate) =>
+      AddClause("having", predicate, ", ", "HAVING ", null);
 
-    public SqlBuilder Insert(string sql)
+    /// <summary>
+    /// INSERT INTO table
+    /// </summary>
+    /// <param name="table"></param>
+    /// <returns></returns>
+    public SqlBuilder Insert(string table)
     {
       template = templates["insert"];
-      return AddClause("insert", sql, null, "INSERT INTO ", null);
+      return AddClause("insert", table, null, "INSERT INTO ", null);
     }
 
-    public SqlBuilder Join(string sql) =>
-      AddClause("join", sql, " INNER JOIN ", null, null, false);
+    /// <summary>
+    /// [INNER] JOIN table and predicate
+    /// </summary>
+    /// <param name="tableAndPredicate"></param>
+    /// <returns></returns>
+    public SqlBuilder Join(string tableAndPredicate) =>
+      AddClause("join", tableAndPredicate, " INNER JOIN ", null, null, false);
 
-    public SqlBuilder LeftJoin(string sql) =>
-      AddClause("join", sql, " LEFT JOIN ", null, null, false);
+    /// <summary>
+    /// LEFT JOIN table and predicate
+    /// </summary>
+    /// <param name="tableAndPredicate"></param>
+    /// <returns></returns>
+    public SqlBuilder LeftJoin(string tableAndPredicate) =>
+      AddClause("join", tableAndPredicate, " LEFT JOIN ", null, null, false);
 
+    /// <summary>
+    /// LIMIT by n rows
+    /// </summary>
+    /// <param name="n"></param>
+    /// <returns></returns>
     public SqlBuilder Limit(int n) =>
       AddClause("limit", n.ToString(), null, "LIMIT ", null, true);
 
-    public SqlBuilder OrderBy(params string[] sql) =>
-      AddClause("orderby", sql, ", ", "ORDER BY ", null);
+    /// <summary>
+    /// ORDER BY columns
+    /// </summary>
+    /// <param name="columns"></param>
+    /// <returns></returns>
+    public SqlBuilder OrderBy(params string[] columns) =>
+      AddClause("orderby", columns, ", ", "ORDER BY ", null);
 
-    public SqlBuilder OrderByDesc(params string[] sql) =>
-      AddClause("orderby", sql.Select(s => $"{s} DESC"), ", ", "ORDER BY ", null);
+    /// <summary>
+    /// ORDER BY DESC columns (i.e. col desc, col2 desc)
+    /// </summary>
+    /// <param name="columns"></param>
+    /// <returns></returns>
+    public SqlBuilder OrderByDesc(params string[] columns) =>
+      AddClause("orderby", columns.Select(s => $"{s} DESC"), ", ", "ORDER BY ", null);
 
-    public SqlBuilder Select(params string[] sql)
+    /// <summary>
+    /// SELECT columns
+    /// </summary>
+    /// <param name="columns"></param>
+    /// <returns></returns>
+    public SqlBuilder Select(params string[] columns)
     {
       AddClause("select", string.Empty, string.Empty, "SELECT ", null);
-      return AddClause("fields", sql, ", ", null, null);
+      return AddClause("fields", columns, ", ", null, null);
     }
 
-    public SqlBuilder Set(params string[] sql) =>
-      AddClause("set", sql, ", ", "SET ", null);
+    public SqlBuilder SelectWithAlias(string alias, params string[] columns)
+    {
+      string aliasProper = (alias[alias.Length - 1] == '.') ? alias : $"{alias}.";
 
+      for (int i = 0; i < columns.Length; i++)
+      {
+        columns[i] = aliasProper + columns[i];
+      }
+
+      AddClause("select", string.Empty, string.Empty, "SELECT ", null);
+      return AddClause("fields", columns, ", ", null, null);
+    }
+
+    /// <summary>
+    /// UPDATE > SET column/value pairs
+    /// </summary>
+    /// <param name="columnAndValuePairs"></param>
+    /// <returns></returns>
+    public SqlBuilder Set(params string[] columnAndValuePairs) =>
+      AddClause("set", columnAndValuePairs, ", ", "SET ", null);
+
+    /// <summary>
+    /// TOP n rows
+    /// </summary>
+    /// <param name="n"></param>
+    /// <returns></returns>
     public SqlBuilder Top(int n) =>
       AddClause("top", n.ToString(), null, "TOP ", null, true);
 
-    public SqlBuilder Update(string sql)
+    /// <summary>
+    /// UPDATE table
+    /// </summary>
+    /// <param name="tableOrAlias"></param>
+    /// <returns></returns>
+    public SqlBuilder Update(string tableOrAlias)
     {
       template = templates["update"];
-      return AddClause("update", sql, null, "UPDATE ", null);
+      return AddClause("update", tableOrAlias, null, "UPDATE ", null);
     }
 
-    public SqlBuilder Value(params string[] sql) =>
-      AddClause("values", sql, ", ", "VALUES (", ")");
+    /// <summary>
+    /// INSERT single record
+    /// </summary>
+    /// <param name="columnAndValuePairs"></param>
+    /// <returns></returns>
+    public SqlBuilder Value(params string[] columnAndValuePairs) =>
+      AddClause("values", columnAndValuePairs, ", ", "VALUES (", ")");
 
-    public SqlBuilder Values(params string[] sql) =>
-      AddClause("values", sql, "), (", "VALUES (", ")");
+    /// <summary>
+    /// INSERT multiple records
+    /// </summary>
+    /// <param name="columnAndValuePairs"></param>
+    /// <returns></returns>
+    public SqlBuilder Values(params string[] columnAndValuePairs) =>
+      AddClause("values", columnAndValuePairs, "), (", "VALUES (", ")");
 
-    public SqlBuilder Where(params string[] sql) =>
-      AddClause("where", string.Join(" AND ", sql), " AND ", "WHERE ", null);
+    /// <summary>
+    /// WHERE [AND] predicates
+    /// </summary>
+    /// <param name="predicates"></param>
+    /// <returns></returns>
+    public SqlBuilder Where(params string[] predicates) =>
+      AddClause("where", string.Join(" AND ", predicates), " AND ", "WHERE ", null);
 
-    public SqlBuilder WhereOr(params string[] sql) =>
-      AddClause("where", string.Join(" OR ", sql), " OR ", "WHERE ", null);
+    /// <summary>
+    /// WHERE [OR] predicates
+    /// </summary>
+    /// <param name="predicates"></param>
+    /// <returns></returns>
+    public SqlBuilder WhereOr(params string[] predicates) =>
+      AddClause("where", string.Join(" OR ", predicates), " OR ", "WHERE ", null);
 
     private SqlBuilder AddClause(string keyword, IEnumerable<string> sql, string glue, string pre, string post, bool singular = true) =>
       AddClause(keyword, string.Join(", ", sql), glue, pre, post, singular);

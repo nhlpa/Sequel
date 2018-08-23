@@ -8,50 +8,52 @@ namespace Sequel
 
     string ToSql();
 
-    SqlBuilder Columns(params string[] sql);
+    SqlBuilder Columns(params string[] columns);
 
-    SqlBuilder Exists(SqlBuilder sqlBuilder);
+    SqlBuilder Exists(SqlBuilder subquerySqlBuilder);
 
-    SqlBuilder Exists(string sql);
+    SqlBuilder Exists(string predicate);
 
-    SqlBuilder From(string sql);
+    SqlBuilder From(string table);
 
-    SqlBuilder From(SqlBuilder sqlBuilder, string alias);
+    SqlBuilder From(SqlBuilder derviedTable, string alias);
 
     SqlBuilder Delete();
 
-    SqlBuilder Delete(string sql);
+    SqlBuilder Delete(string alias);
 
-    SqlBuilder GroupBy(params string[] sql);
+    SqlBuilder GroupBy(params string[] columns);
 
-    SqlBuilder Having(params string[] sql);
+    SqlBuilder Having(params string[] predicates);
 
-    SqlBuilder Insert(string sql);
+    SqlBuilder Insert(string table);
 
-    SqlBuilder Join(string sql);
+    SqlBuilder Join(string tableAndPredicate);
 
-    SqlBuilder LeftJoin(string sql);
+    SqlBuilder LeftJoin(string tableAndPredicate);
 
     SqlBuilder Limit(int n);
 
-    SqlBuilder OrderBy(params string[] sql);
+    SqlBuilder OrderBy(params string[] columns);
 
-    SqlBuilder OrderByDesc(params string[] sql);
+    SqlBuilder OrderByDesc(params string[] columns);
 
-    SqlBuilder Select(params string[] sql);
+    SqlBuilder Select(params string[] columns);
 
-    SqlBuilder Set(params string[] sql);
+    SqlBuilder SelectWithAlias(string alias, params string[] columns);
+
+    SqlBuilder Set(params string[] columnAndValuePairs);
 
     SqlBuilder Top(int n);
 
-    SqlBuilder Update(string sql);
+    SqlBuilder Update(string tableOrAlias);
 
-    SqlBuilder Value(params string[] sql);
+    SqlBuilder Value(params string[] columnAndValuePairs);
 
-    SqlBuilder Values(params string[] sql);
+    SqlBuilder Values(params string[] columnAndValuePairs);
 
-    SqlBuilder Where(params string[] sql);
+    SqlBuilder Where(params string[] predicates);
 
-    SqlBuilder WhereOr(params string[] sql);
+    SqlBuilder WhereOr(params string[] predicates);
   }
 }

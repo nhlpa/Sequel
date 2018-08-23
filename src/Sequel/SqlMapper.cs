@@ -1,5 +1,4 @@
 ﻿using FastMember;
-using Sequel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,27 +37,51 @@ namespace Sequel
       }
     }
 
+    /// <summary>
+    /// Table name, can include schema
+    /// </summary>
     public virtual string Table =>
       table ?? (table = EntityType.Name);
 
+    /// <summary>
+    /// Primary key column name
+    /// </summary>
     public virtual string Key =>
       key ?? (key = "Id");
 
+    /// <summary>
+    /// Primary key column name prefixed with {Table}
+    /// </summary>
     public virtual string KeyQualified =>
       $"{Table}.{Key}";
 
+    /// <summary>
+    /// All column names
+    /// </summary>
     public virtual string[] Fields =>
       fields ?? (fields = Members.Select(p => p.Name).ToArray());
 
+    /// <summary>
+    /// All column names prefixed with {Table}
+    /// </summary>
     public virtual string[] FieldsQualified =>
       Fields.Select(f => $"{Table}.{f}").ToArray();
 
+    /// <summary>
+    /// Column names excluding Key
+    /// </summary>
     public virtual string[] NonKeyFields =>
       nonKeyFields ?? (nonKeyFields = Fields.Where(f => !string.Equals(f, $"{Key}", StringComparison.OrdinalIgnoreCase)).ToArray());
 
+    /// <summary>
+    /// Column names excluding Key prefixed with {Table}
+    /// </summary>
     public virtual string[] NonKeyFieldsQualified =>
       NonKeyFields.Select(f => $"{Table}.{f}").ToArray();
 
+    /// <summary>
+    /// INSERT statement
+    /// </summary>
     public virtual SqlBuilder CreateSql
     {
       get
@@ -70,6 +93,10 @@ namespace Sequel
       }
     }
 
+    /// <summary>
+    /// SELECT statement
+    /// Sets parameter @{Key}
+    /// </summary>
     public virtual SqlBuilder ReadSql
     {
       get
@@ -80,6 +107,10 @@ namespace Sequel
       }
     }
 
+    /// <summary>
+    /// UPDATE statement
+    /// Sets parameter @{Key}
+    /// </summary>
     public virtual SqlBuilder UpdateSql
     {
       get
@@ -91,6 +122,10 @@ namespace Sequel
       }
     }
 
+    /// <summary>
+    /// DELETE statement
+    /// Sets parameter @{Key}
+    /// </summary>
     public virtual SqlBuilder DeleteSql
     {
       get

@@ -156,6 +156,31 @@ namespace Sequel.Tests
     }
 
     [Fact]
+    public void SelectWithAliasTest()
+    {
+      var sqlBuilder = new SqlBuilder()
+                           .SelectWithAlias("t", "Id", "Salary")
+                           .From("dbo.Test t");
+
+      var result = sqlBuilder.ToSql();
+
+      Assert.Equal("SELECT t.Id, t.Salary FROM dbo.Test t", result);
+    }
+
+    [Fact]
+    public void SelectWithAliasMultipleTest()
+    {
+      var sqlBuilder = new SqlBuilder()
+                           .SelectWithAlias("t", "Id")
+                           .SelectWithAlias("t", "Salary")
+                           .From("dbo.Test t");
+
+      var result = sqlBuilder.ToSql();
+
+      Assert.Equal("SELECT t.Id, t.Salary FROM dbo.Test t", result);
+    }
+
+    [Fact]
     public void SelectGroupByTest()
     {
       var sqlBuilder = new SqlBuilder()
