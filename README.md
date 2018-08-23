@@ -203,4 +203,4 @@ There's an [issue](https://github.com/pimbrouwers/sequel/issues) for that.
 
 ## License
 
-Built with ♥ by [Pim Brouwers](https://github.com/pimbrouwers) in Toronto, ON. Licensed under [MIT](https://github.com/pimbrouwers/sequel/blob/master/LICENSE).
+Built with ♥ by [Pim Brouwers](https://github.com/pimbrouwers) in Toronto, ON. Licensed under [GNU](https://github.com/pimbrouwers/sequel/blob/master/LICENSE).
