@@ -196,3 +196,11 @@ using(var conn = new SqlConnection("your connection string")
   var result = conn.Query(sql, new { Id = 1 });
 }
 ```
+
+## Find a bug?
+
+There's an [issue](https://github.com/pimbrouwers/sequel/issues) for that.
+
+## License
+
+Built with ♥ by [Pim Brouwers](https://github.com/pimbrouwers) in Toronto, ON. Licensed under [MIT](https://github.com/pimbrouwers/sequel/blob/master/LICENSE).
