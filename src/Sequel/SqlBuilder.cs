@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+
 using System.Text.RegularExpressions;
 
 namespace Sequel
@@ -187,8 +187,15 @@ namespace Sequel
     /// </summary>
     /// <param name="columns"></param>
     /// <returns></returns>
-    public SqlBuilder OrderByDesc(params string[] columns) =>
-      AddClause("orderby", columns.Select(s => $"{s} DESC"), ", ", "ORDER BY ", null);
+    public SqlBuilder OrderByDesc(params string[] columns)
+    {
+      for (int i = 0; i < columns.Length; i++)
+      {
+        columns[i] = columns[i] + " DESC";
+      }
+
+      return AddClause("orderby", columns, ", ", "ORDER BY ", null);
+    }
 
     /// <summary>
     /// SELECT columns
@@ -289,7 +296,7 @@ namespace Sequel
       return this;
     }
 
-    private class SqlClauseSet : HashSet<SqlClause>
+    private class SqlClauseSet : List<SqlClause>
     {
       public SqlClauseSet(string glue, string pre, string post, bool singular = true)
       {
@@ -306,22 +313,28 @@ namespace Sequel
 
       public string ToSql()
       {
-        string sql;
+        string Sql = string.Empty;
 
         if (string.IsNullOrWhiteSpace(Glue))
         {
-          sql = this.LastOrDefault().Sql;
+          Sql = this[Count - 1].Sql;
         }
         else if (!Singular)
         {
-          sql = string.Join("", this.Select(clause => $"{clause.Glue}{clause.Sql}"));
+          for (int i = 0; i < Count; i++)
+          {
+            Sql += this[i].Glue + this[i].Sql;
+          }
         }
         else
         {
-          sql = string.Join(Glue, this.Select(clause => clause.Sql));
+          for (int i = 0; i < Count; i++)
+          {
+            Sql += this[i].Sql;
+          }
         }
 
-        return $"{Pre}{sql}{Post}".Trim();
+        return string.Join("", Pre, Sql, Post).Trim();
       }
     }
 
