@@ -330,7 +330,14 @@ namespace Sequel
         {
           for (int i = 0; i < Count; i++)
           {
-            Sql += this[i].Sql;
+            if (i == 0)
+            {
+              Sql += this[i].Sql;
+            }
+            else
+            {
+              Sql += Glue + this[i].Sql;
+            }
           }
         }
 
