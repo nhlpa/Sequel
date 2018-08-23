@@ -38,10 +38,8 @@ namespace Sequel
     /// Render SQL statement as string
     /// </summary>
     /// <returns></returns>
-    public override string ToString()
-    {
-      return ToSql();
-    }
+    public override string ToString() =>
+      ToSql();
 
     /// <summary>
     /// Render SQL statement as string
@@ -51,7 +49,7 @@ namespace Sequel
     {
       foreach (var clauseSet in clauses)
       {
-        template = Regex.Replace(template, $"\\|\\|{clauseSet.Key}\\|\\|", clauseSet.Value.ToSql(), RegexOptions.IgnoreCase);
+        template = Regex.Replace(template, "\\|\\|" + clauseSet.Key + "\\|\\|", clauseSet.Value.ToSql(), RegexOptions.IgnoreCase);
       }
 
       template = Regex.Replace(template, @"\|\|[a-z]+\|\|\s{0,1}", "").Trim();
@@ -73,7 +71,7 @@ namespace Sequel
     /// <param name="sqlBuilder"></param>
     /// <returns></returns>
     public SqlBuilder Exists(SqlBuilder sqlBuilder) =>
-      Where($"EXISTS ({sqlBuilder.ToSql()})");
+      Where("EXISTS (" + sqlBuilder.ToSql() + ")");
 
     /// <summary>
     /// EXISTS predicate
@@ -81,7 +79,7 @@ namespace Sequel
     /// <param name="predicate"></param>
     /// <returns></returns>
     public SqlBuilder Exists(string predicate) =>
-      Where($"EXISTS ({predicate})");
+      Where("EXISTS (" + predicate + ")");
 
     /// <summary>
     /// FROM table
@@ -98,7 +96,7 @@ namespace Sequel
     /// <param name="alias"></param>
     /// <returns></returns>
     public SqlBuilder From(SqlBuilder derivedTable, string alias) =>
-      AddClause("from", derivedTable.ToSql(), null, "FROM (", $") as {alias}");
+      AddClause("from", derivedTable.ToSql(), null, "FROM (", ") as " + alias);
 
     /// <summary>
     /// DELETE clause
@@ -187,7 +185,7 @@ namespace Sequel
     /// <returns></returns>
     public SqlBuilder OrderByDesc(params string[] columns)
     {
-      for (int i = 0; i < columns.Length; i++)
+      for (var i = 0; i < columns.Length; i++)
       {
         columns[i] = columns[i] + " DESC";
       }
@@ -208,9 +206,9 @@ namespace Sequel
 
     public SqlBuilder SelectWithAlias(string alias, params string[] columns)
     {
-      string aliasProper = (alias[alias.Length - 1] == '.') ? alias : $"{alias}.";
+      string aliasProper = (alias[alias.Length - 1] == '.') ? alias : alias + ".";
 
-      for (int i = 0; i < columns.Length; i++)
+      for (var i = 0; i < columns.Length; i++)
       {
         columns[i] = aliasProper + columns[i];
       }
@@ -311,35 +309,35 @@ namespace Sequel
 
       public string ToSql()
       {
-        string Sql = string.Empty;
+        var sql = string.Empty;
 
         if (string.IsNullOrWhiteSpace(Glue))
         {
-          Sql = this[Count - 1].Sql;
+          sql = this[Count - 1].Sql;
         }
         else if (!Singular)
         {
-          for (int i = 0; i < Count; i++)
+          for (var i = 0; i < Count; i++)
           {
-            Sql += this[i].Glue + this[i].Sql;
+            sql += this[i].Glue + this[i].Sql;
           }
         }
         else
         {
-          for (int i = 0; i < Count; i++)
+          for (var i = 0; i < Count; i++)
           {
             if (i == 0)
             {
-              Sql += this[i].Sql;
+              sql += this[i].Sql;
             }
             else
             {
-              Sql += Glue + this[i].Sql;
+              sql += Glue + this[i].Sql;
             }
           }
         }
 
-        return string.Join("", Pre, Sql, Post).Trim();
+        return string.Join("", Pre, sql, Post).Trim();
       }
     }
 

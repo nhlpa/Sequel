@@ -94,11 +94,11 @@ namespace Sequel
       {
         if (fieldsQualified == null)
         {
-          fieldsQualified = new string[Members.Length];
+          fieldsQualified = new string[Fields.Length];
 
-          for (int i = 0; i < Members.Length; i++)
+          for (int i = 0; i < Fields.Length; i++)
           {
-            fieldsQualified[i] = Table + "." + Members[i].Name;
+            fieldsQualified[i] = Table + "." + Fields[i];
           }
         }
 
@@ -115,11 +115,17 @@ namespace Sequel
       {
         if (nonKeyFields == null)
         {
-          nonKeyFields = new string[NonKeyMembers.Length];
+          nonKeyFields = new string[Fields.Length - 1];
+          var nonKeyFieldIndex = 0;
 
-          for (int i = 0; i < NonKeyMembers.Length; i++)
+          for (var i = 0; i < Fields.Length; i++)
           {
-            nonKeyFields[i] = NonKeyMembers[i].Name;
+            if (!string.Equals(Key, Fields[i]))
+            {
+              nonKeyFields[nonKeyFieldIndex] = Fields[i];
+
+              nonKeyFieldIndex++;
+            }
           }
         }
 
@@ -136,11 +142,11 @@ namespace Sequel
       {
         if (nonKeyFieldsQualified == null)
         {
-          nonKeyFieldsQualified = new string[NonKeyMembers.Length];
+          nonKeyFieldsQualified = new string[NonKeyFields.Length];
 
-          for (int i = 0; i < NonKeyMembers.Length; i++)
+          for (var i = 0; i < NonKeyFields.Length; i++)
           {
-            nonKeyFieldsQualified[i] = Table + "." + NonKeyMembers[i].Name;
+            nonKeyFieldsQualified[i] = Table + "." + NonKeyFields[i];
           }
         }
 
@@ -155,7 +161,6 @@ namespace Sequel
       new SqlBuilder()
         .Insert(Table)
         .Columns(NonKeyFields)
-        //.Values(string.Join(", ", NonKeyFields.Select(f => $"@{f}")));
         .Values(CreateValues);
 
     /// <summary>
@@ -174,7 +179,6 @@ namespace Sequel
     public virtual SqlBuilder UpdateSql =>
       new SqlBuilder()
         .Update(Table)
-        //.Set(NonKeyFields.Select(f => $"{f} = @{f}").ToArray())
         .Set(UpdateSet)
         .Where(KeyPredicate);
 
@@ -194,8 +198,6 @@ namespace Sequel
 
     private Member[] Members { get; set; }
 
-    private Member[] NonKeyMembers { get; set; }
-
     private string KeyPredicate =>
       keyPredicate ?? (keyPredicate = Key + " = @" + Key);
 
@@ -207,7 +209,7 @@ namespace Sequel
         {
           createValues = new string[NonKeyFields.Length];
 
-          for (int i = 0; i < NonKeyFields.Length; i++)
+          for (var i = 0; i < NonKeyFields.Length; i++)
           {
             createValues[i] += "@" + NonKeyFields[i];
           }
@@ -225,7 +227,7 @@ namespace Sequel
         {
           updateSet = new string[NonKeyFields.Length];
 
-          for (int i = 0; i < NonKeyFields.Length; i++)
+          for (var i = 0; i < NonKeyFields.Length; i++)
           {
             updateSet[i] = NonKeyFields[i] + " = @" + NonKeyFields[i];
           }
@@ -245,18 +247,12 @@ namespace Sequel
 
     private void ResolveMembers()
     {
-      var memberSet = EntityTypeAccessor.GetMembers();
+      MemberSet memberSet = EntityTypeAccessor.GetMembers();
       var members = new Member[memberSet.Count]; //initialize to full member count, but track valid count
-      var validMembers = 0;
-
-      var nonKeyMembers = new Member[memberSet.Count - 1]; //initialize to full member count -1 for key, but track valid count
-      int validNonKeyMembers = 0;
-
-      int memberIndex = 1; //start at 1 because we reserve the fist slot for the Key field
-      int nonKeyMemberIndex = 0;
+      var memberIndex = 1; //start at 1 because we reserve the fist slot for the Key field
 
       //determine valid members and nonkey members
-      for (int i = 0; i < memberSet.Count; i++)
+      for (var i = 0; i < memberSet.Count; i++)
       {
         var member = memberSet[i];
 
@@ -269,29 +265,17 @@ namespace Sequel
           else
           {
             members[memberIndex] = member;
-            nonKeyMembers[nonKeyMemberIndex] = member;
-
-            validNonKeyMembers++;
             memberIndex++;
-            nonKeyMemberIndex++;
           }
-
-          validMembers++;
         }
       }
 
-      Members = new Member[validMembers];
-      NonKeyMembers = new Member[validNonKeyMembers];
+      Members = new Member[memberIndex];
 
       //set valid members
-      for (int i = 0; i < validMembers; i++)
+      for (var i = 0; i < memberIndex; i++)
       {
         Members[i] = members[i];
-      }
-
-      for (int i = 0; i < validNonKeyMembers; i++)
-      {
-        NonKeyMembers[i] = nonKeyMembers[i];
       }
     }
   }
