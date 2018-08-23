@@ -1,10 +1,19 @@
-# sequel
-[sequel](https://github.com/pimbrouwers/sequel) is an expressive SQL query builder, with syntax that emulates writing actual SQL queries.
-
+# SeQueL
 ![NuGet Version](https://img.shields.io/nuget/v/Sequel.svg)
 [![Build Status](https://travis-ci.org/pimbrouwers/sequel.svg?branch=master)](https://travis-ci.org/pimbrouwers/sequel)
 
-## Basic Usage
+[SeQueL](https://github.com/pimbrouwers/sequel) is a **blazing** fast, expressive SQL statement builder, with an interface that emulates writing actual SQL queries.
+
+It comes bundled with an `ISqlMapper<T>` which can be used to generate metadata for domain classes. Yielding:
+- Table name
+- Key column
+- Fields 
+- Fields excluding key
+- Fields qualified by table name
+- Non-key fields qualified by table name
+- `SqlBuilder` representing `CREATE` / `UPDATE` / `READ` / `DELETE`  for domain class for straight-forward CRUD application
+
+## Getting Started
 ### `SELECT`
 
 ```c#
@@ -64,7 +73,9 @@ DELETE FROM dbo.Test WHERE EmployeeId = 1
 */
 ```
 
-## Templating
+## Using `ISqlMapper<T>`
+
+## Custom Templating
 
 [sequel](https://github.com/pimbrouwers/sequel) has built-in templates to support the actions listed above, but also supports custom templating for edge cases. To formulate the SQL string, [sequel](https://github.com/pimbrouwers/sequel) uses `||` delimiters surrounding the following keywords:
 
