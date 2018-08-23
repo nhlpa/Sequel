@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace Sequel
 {
-  public class SqlBuilder : ISqlBuilder
+  public class SqlBuilder
   {
     private string template;
 

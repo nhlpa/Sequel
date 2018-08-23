@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -167,7 +166,7 @@ namespace Sequel.Tests
       public void Should_be_valid_sql_select_statement()
       {
         //Arrange
-        var expected = "SELECT MockEntity.Cents, MockEntity.Id, MockEntity.Name FROM MockEntity";
+        var expected = "SELECT MockEntity.Id, MockEntity.Cents, MockEntity.Name FROM MockEntity";
 
         //Act
         var readSql = sqlMapper.ReadSql.ToSql();
