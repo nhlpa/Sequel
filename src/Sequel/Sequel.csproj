@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Description>Makes building dynamic SQL Queries easier.</Description>
+    <Description>A blazing fast SQL builder with an interface that emulates writing actual SQL queries.</Description>
     <Copyright>2018</Copyright>
     <PackageLicenseUrl>https://github.com/pimbrouwers/sequel/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/pimbrouwers/sequel</PackageProjectUrl>
@@ -11,9 +11,9 @@
     <RepositoryType>Git</RepositoryType>
     <PackageTags>sql query querybuilder fluentquerybuilder</PackageTags>
     <Version>1.1.1</Version>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
-    <PackageReleaseNotes>Patch to fix major constructor error in SqlMapper</PackageReleaseNotes>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <FileVersion>1.1.0.0</FileVersion>
+    <PackageReleaseNotes>Patch to remove value mutation on SelectWithAlias &amp; OrderByDesc iterations</PackageReleaseNotes>
     <PackageId>Sequel</PackageId>
     <Company></Company>
     <Authors>Pim Brouwers</Authors>
