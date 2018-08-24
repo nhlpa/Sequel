@@ -20,15 +20,7 @@ namespace Sequel
     private string[] createValues;
     private string[] updateSet;
 
-    public SqlMapper()
-    {
-      EntityType = typeof(TEntity);
-      EntityTypeAccessor = TypeAccessor.Create(EntityType);
-      ResolveMembers();
-    }
-
     public SqlMapper(string table = null, string key = null, string[] fields = null)
-      : this()
     {
       if (!string.IsNullOrWhiteSpace(table))
       {
@@ -44,6 +36,10 @@ namespace Sequel
       {
         this.fields = fields;
       }
+
+      EntityType = typeof(TEntity);
+      EntityTypeAccessor = TypeAccessor.Create(EntityType);
+      ResolveMembers();
     }
 
     /// <summary>

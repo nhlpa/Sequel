@@ -10,10 +10,10 @@
     <RepositoryUrl>https://github.com/pimbrouwers/sequel</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
     <PackageTags>sql query querybuilder fluentquerybuilder</PackageTags>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
-    <PackageReleaseNotes>Major performance improvements via System.Linq dependency removal.</PackageReleaseNotes>
+    <PackageReleaseNotes>Patch to fix major constructor error in SqlMapper</PackageReleaseNotes>
     <PackageId>Sequel</PackageId>
     <Company></Company>
     <Authors>Pim Brouwers</Authors>

@@ -208,7 +208,7 @@ namespace Sequel.Tests
       }
     }
 
-    public class MockEntity
+    public sealed class MockEntity
     {
       public int Id { get; set; }
       public string Name { get; set; }
@@ -219,7 +219,7 @@ namespace Sequel.Tests
       public IEnumerable<MockChildEntity> Children { get; set; }
     }
 
-    public class MockChildEntity
+    public sealed class MockChildEntity
     {
       public int Id { get; set; }
       public int ParentId { get; set; }
