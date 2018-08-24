@@ -158,13 +158,20 @@ namespace Sequel.Tests
     [Fact]
     public void SelectWithAliasTest()
     {
+      string alias = "t";
+      string[] columns = new string[] { "Id", "Salary" };
       var sqlBuilder = new SqlBuilder()
-                           .SelectWithAlias("t", "Id", "Salary")
+                           .SelectWithAlias(alias, columns)
                            .From("dbo.Test t");
 
       var result = sqlBuilder.ToSql();
 
       Assert.Equal("SELECT t.Id, t.Salary FROM dbo.Test t", result);
+
+      //Ensure mutation hasn't occured
+      Assert.Equal("t", alias);
+      Assert.Equal("Id", columns[0]);
+      Assert.Equal("Salary", columns[1]);
     }
 
     [Fact]
@@ -225,14 +232,18 @@ namespace Sequel.Tests
     [Fact]
     public void SelectOrderByDescTest()
     {
+      string orderByDesc = "Id";
       var sqlBuilder = new SqlBuilder()
                            .Select("*")
                            .From("dbo.Test")
-                           .OrderByDesc("Id");
+                           .OrderByDesc(orderByDesc);
 
       var result = sqlBuilder.ToSql();
 
       Assert.Equal("SELECT * FROM dbo.Test ORDER BY Id DESC", result);
+
+      //Ensure mutation hasn't occured
+      Assert.Equal("Id", orderByDesc);
     }
 
     [Fact]

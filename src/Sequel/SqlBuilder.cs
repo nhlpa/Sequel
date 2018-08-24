@@ -185,12 +185,13 @@ namespace Sequel
     /// <returns></returns>
     public SqlBuilder OrderByDesc(params string[] columns)
     {
+      string[] columnsDesc = new string[columns.Length];
       for (var i = 0; i < columns.Length; i++)
       {
-        columns[i] = columns[i] + " DESC";
+        columnsDesc[i] = columns[i] + " DESC";
       }
 
-      return AddClause("orderby", columns, ", ", "ORDER BY ", null);
+      return AddClause("orderby", columnsDesc, ", ", "ORDER BY ", null);
     }
 
     /// <summary>
@@ -204,17 +205,24 @@ namespace Sequel
       return AddClause("fields", columns, ", ", null, null);
     }
 
+    /// <summary>
+    /// SELECT columns and apply provided alias
+    /// </summary>
+    /// <param name="alias"></param>
+    /// <param name="columns"></param>
+    /// <returns></returns>
     public SqlBuilder SelectWithAlias(string alias, params string[] columns)
     {
+      string[] columnsAliased = new string[columns.Length];
       string aliasProper = (alias[alias.Length - 1] == '.') ? alias : alias + ".";
 
       for (var i = 0; i < columns.Length; i++)
       {
-        columns[i] = aliasProper + columns[i];
+        columnsAliased[i] = aliasProper + columns[i];
       }
 
       AddClause("select", string.Empty, string.Empty, "SELECT ", null);
-      return AddClause("fields", columns, ", ", null, null);
+      return AddClause("fields", columnsAliased, ", ", null, null);
     }
 
     /// <summary>
