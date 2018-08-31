@@ -25,6 +25,18 @@ namespace Sequel.Tests
     }
 
     [Fact]
+    public void SelectStarTestFromAlias()
+    {
+      var sqlBuilder = new SqlBuilder()
+                           .Select("*")
+                           .From("dbo.Test", "t");
+
+      var result = sqlBuilder.ToSql();
+
+      Assert.Equal("SELECT * FROM dbo.Test AS t", result);
+    }
+
+    [Fact]
     public void SelectStarTopTest()
     {
       var sqlBuilder = new SqlBuilder()
@@ -242,7 +254,6 @@ namespace Sequel.Tests
 
       Assert.Equal("SELECT * FROM dbo.Test ORDER BY Id DESC", result);
 
-      //Ensure mutation hasn't occured
       Assert.Equal("Id", orderByDesc);
     }
 
@@ -337,6 +348,32 @@ namespace Sequel.Tests
     }
 
     [Fact]
+    public void JoinPedicateTest()
+    {
+      var sqlBuilder = new SqlBuilder()
+                          .Select("*")
+                          .From("dbo.Test t")
+                          .Join("dbo.Employee e", "e.Id = t.EmployeeId");
+
+      var result = sqlBuilder.ToSql();
+
+      Assert.Equal("SELECT * FROM dbo.Test t INNER JOIN dbo.Employee e ON e.Id = t.EmployeeId", result);
+    }
+
+    [Fact]
+    public void JoinAliasPredicateTest()
+    {
+      var sqlBuilder = new SqlBuilder()
+                          .Select("*")
+                          .From("dbo.Test t")
+                          .Join("dbo.Employee", "e", "e.Id = t.EmployeeId");
+
+      var result = sqlBuilder.ToSql();
+
+      Assert.Equal("SELECT * FROM dbo.Test t INNER JOIN dbo.Employee AS e ON e.Id = t.EmployeeId", result);
+    }
+
+    [Fact]
     public void LeftJoinTest()
     {
       var sqlBuilder = new SqlBuilder()
@@ -347,6 +384,32 @@ namespace Sequel.Tests
       var result = sqlBuilder.ToSql();
 
       Assert.Equal("SELECT * FROM dbo.Test t LEFT JOIN dbo.Employee e on e.Id = t.EmployeeId", result);
+    }
+
+    [Fact]
+    public void LeftJoinPedicateTest()
+    {
+      var sqlBuilder = new SqlBuilder()
+                          .Select("*")
+                          .From("dbo.Test t")
+                          .LeftJoin("dbo.Employee e", "e.Id = t.EmployeeId");
+
+      var result = sqlBuilder.ToSql();
+
+      Assert.Equal("SELECT * FROM dbo.Test t LEFT JOIN dbo.Employee e ON e.Id = t.EmployeeId", result);
+    }
+
+    [Fact]
+    public void LeftJoinAliasPredicateTest()
+    {
+      var sqlBuilder = new SqlBuilder()
+                          .Select("*")
+                          .From("dbo.Test t")
+                          .LeftJoin("dbo.Employee", "e", "e.Id = t.EmployeeId");
+
+      var result = sqlBuilder.ToSql();
+
+      Assert.Equal("SELECT * FROM dbo.Test t LEFT JOIN dbo.Employee AS e ON e.Id = t.EmployeeId", result);
     }
 
     [Fact]

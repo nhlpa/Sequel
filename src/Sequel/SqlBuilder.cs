@@ -90,6 +90,15 @@ namespace Sequel
       AddClause("from", table, null, "FROM ", null);
 
     /// <summary>
+    /// FROM table with alias
+    /// </summary>
+    /// <param name="table"></param>
+    /// <param name="alias"></param>
+    /// <returns></returns>
+    public SqlBuilder From(string table, string alias) =>
+      From(table + " AS " + alias);
+
+    /// <summary>
     /// FROM derived table
     /// </summary>
     /// <param name="derivedTable"></param>
@@ -155,12 +164,50 @@ namespace Sequel
       AddClause("join", tableAndPredicate, " INNER JOIN ", null, null, false);
 
     /// <summary>
+    /// [INNER] JOIN table with predicate
+    /// </summary>
+    /// <param name="table"></param>
+    /// <param name="predicate"></param>
+    /// <returns></returns>
+    public SqlBuilder Join(string table, string predicate) =>
+      Join(table + " ON " + predicate);
+
+    /// <summary>
+    /// [INNER] JOIN table with alias and predicate
+    /// </summary>
+    /// <param name="table"></param>
+    /// <param name="alias"></param>
+    /// <param name="predicate"></param>
+    /// <returns></returns>
+    public SqlBuilder Join(string table, string alias, string predicate) =>
+      Join(table + " AS " + alias + " ON " + predicate);
+
+    /// <summary>
     /// LEFT JOIN table and predicate
     /// </summary>
     /// <param name="tableAndPredicate"></param>
     /// <returns></returns>
     public SqlBuilder LeftJoin(string tableAndPredicate) =>
       AddClause("join", tableAndPredicate, " LEFT JOIN ", null, null, false);
+
+    /// <summary>
+    /// LEFT JOIN table with predicate
+    /// </summary>
+    /// <param name="table"></param>
+    /// <param name="predicate"></param>
+    /// <returns></returns>
+    public SqlBuilder LeftJoin(string table, string predicate) =>
+      LeftJoin(table + " ON " + predicate);
+
+    /// <summary>
+    /// LEFT JOIN table with alias and predicate
+    /// </summary>
+    /// <param name="table"></param>
+    /// <param name="alias"></param>
+    /// <param name="predicate"></param>
+    /// <returns></returns>
+    public SqlBuilder LeftJoin(string table, string alias, string predicate) =>
+      LeftJoin(table + " AS " + alias + " ON " + predicate);
 
     /// <summary>
     /// LIMIT by n rows
@@ -226,7 +273,7 @@ namespace Sequel
     }
 
     /// <summary>
-    /// UPDATE > SET column/value pairs
+    /// UPDATE &gt; SET column/value pairs
     /// </summary>
     /// <param name="columnAndValuePairs"></param>
     /// <returns></returns>
@@ -284,7 +331,7 @@ namespace Sequel
     public SqlBuilder WhereOr(params string[] predicates) =>
       AddClause("where", string.Join(" OR ", predicates), " OR ", "WHERE ", null);
 
-    private SqlBuilder AddClause(string keyword, IEnumerable<string> sql, string glue, string pre, string post, bool singular = true) =>
+    private SqlBuilder AddClause(string keyword, string[] sql, string glue, string pre, string post, bool singular = true) =>
       AddClause(keyword, string.Join(", ", sql), glue, pre, post, singular);
 
     private SqlBuilder AddClause(string keyword, string sql, string glue, string pre, string post, bool singular = true)
