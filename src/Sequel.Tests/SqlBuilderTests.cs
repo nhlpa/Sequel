@@ -457,7 +457,7 @@ namespace Sequel.Tests
     {
       var sqlBuilder = new SqlBuilder()
                           .Insert("dbo.Test")
-                          .Columns("Name", "Salary")
+                          .Into("Name", "Salary")
                           .Value("'Pim'", "50");
 
       var result = sqlBuilder.ToSql();
@@ -470,8 +470,8 @@ namespace Sequel.Tests
     {
       var sqlBuilder = new SqlBuilder()
                           .Insert("dbo.Test")
-                          .Columns("Name")
-                          .Columns("Salary")
+                          .Into("Name")
+                          .Into("Salary")
                           .Values("'Pim'", "50")
                           .Values("'Lindsey'", "100");
 

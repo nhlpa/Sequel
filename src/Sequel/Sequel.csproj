@@ -1,31 +1,26 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Description>A blazing fast SQL builder with an interface that emulates writing actual SQL queries.</Description>
     <Copyright>2018</Copyright>
     <PackageLicenseUrl>https://github.com/pimbrouwers/sequel/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/pimbrouwers/sequel</PackageProjectUrl>
-    <PackageIconUrl>http://www.pimbrouwers.com/cinch.png</PackageIconUrl>
+    <PackageIconUrl></PackageIconUrl>
     <RepositoryUrl>https://github.com/pimbrouwers/sequel</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
     <PackageTags>sql query querybuilder fluentquerybuilder</PackageTags>
-    <Version>1.1.3</Version>
+    <Version>1.1.5</Version>
     <AssemblyVersion>1.1.0.0</AssemblyVersion>
     <FileVersion>1.1.0.0</FileVersion>
-    <PackageReleaseNotes>Patch to remove value mutation on SelectWithAlias &amp; OrderByDesc iterations</PackageReleaseNotes>
+    <PackageReleaseNotes>IDbTransaction extensions and Mapped Repository</PackageReleaseNotes>
     <PackageId>Sequel</PackageId>
-    <Company></Company>
+    <Company>
+    </Company>
     <Authors>Pim Brouwers</Authors>
     <Product>Sequel</Product>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <Optimize>false</Optimize>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="FastMember" Version="1.4.1" />
-  </ItemGroup>
-
 </Project>

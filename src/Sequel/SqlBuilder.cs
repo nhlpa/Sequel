@@ -60,10 +60,10 @@ namespace Sequel
     /// <summary>
     /// Register columns for INSERT
     /// </summary>
-    /// <param name="columns"></param>
+    /// <param name="into"></param>
     /// <returns></returns>
-    public SqlBuilder Columns(params string[] columns) =>
-      AddClause("columns", columns, ", ", "(", ")");
+    public SqlBuilder Into(params string[] into) =>
+      AddClause("columns", into, ", ", "(", ")");
 
     /// <summary>
     /// EXISTS predicate subquery
