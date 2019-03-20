@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace Sequel
@@ -324,6 +325,23 @@ namespace Sequel
       AddClause("where", string.Join(" AND ", predicates), " AND ", "WHERE ", null);
 
     /// <summary>
+    /// WHERE [AND] predicates from anonymous object.
+    /// Only supports "=" comparison.
+    /// </summary>
+    /// <param name="param"></param>
+    /// <returns></returns>
+    public SqlBuilder Where(object param)
+    {
+      if(TryGetPredicatesFromProps(param, out string[] predicates) && predicates.Length > 0)
+      {        
+        Where(predicates);
+      }
+
+      return this;
+    }
+      
+
+    /// <summary>
     /// WHERE [OR] predicates
     /// </summary>
     /// <param name="predicates"></param>
@@ -347,69 +365,24 @@ namespace Sequel
       return this;
     }
 
-    private class SqlClauseSet : List<SqlClause>
+    private bool TryGetPredicatesFromProps(object predicates, out string[] p)
     {
-      public SqlClauseSet(string glue, string pre, string post, bool singular = true)
+      p = new string[] { };
+      bool success = false;
+      var propPredicates = predicates?.GetType().GetRuntimeProperties();
+      
+      if(propPredicates != null)
       {
-        Glue = glue;
-        Post = post;
-        Pre = pre;
-        Singular = singular;
+        success = true;        
+        int i = 0;
+
+        foreach(var propPredicate in propPredicates)
+        {
+          p[i] = propPredicate.Name + " = @" + propPredicate.Name;
+        }
       }
 
-      public string Glue { get; }
-      public string Post { get; }
-      public string Pre { get; }
-      public bool Singular { get; }
-
-      public string ToSql()
-      {
-        var sql = string.Empty;
-
-        if (string.IsNullOrWhiteSpace(Glue))
-        {
-          sql = this[Count - 1].Sql;
-        }
-        else if (!Singular)
-        {
-          for (var i = 0; i < Count; i++)
-          {
-            sql += this[i].Glue + this[i].Sql;
-          }
-        }
-        else
-        {
-          for (var i = 0; i < Count; i++)
-          {
-            if (i == 0)
-            {
-              sql += this[i].Sql;
-            }
-            else
-            {
-              sql += Glue + this[i].Sql;
-            }
-          }
-        }
-
-        return string.Join("", Pre, sql, Post).Trim();
-      }
-    }
-
-    private class SqlClause
-    {
-      public SqlClause(string sql, string glue)
-      {
-        if (!string.IsNullOrWhiteSpace(glue))
-        {
-          Glue = glue;
-        }
-
-        Sql = sql;
-      }
-
-      public string Glue { get; }
-      public string Sql { get; }
+      return success;
     }
   }
 }
