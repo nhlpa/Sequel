@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace Sequel
@@ -56,6 +55,27 @@ namespace Sequel
       template = Regex.Replace(template, @"\|\|[a-z]+\|\|\s{0,1}", "").Trim();
 
       return template;
+    }
+
+    public static SqlBuilder Sel(params string[] columns) =>
+      new SqlBuilder().Select(columns);
+
+    public static SqlBuilder Ins(string table)
+      => new SqlBuilder().Insert(table);
+
+    public static SqlBuilder Upd(string tableOrAlias)
+      => new SqlBuilder().Update(tableOrAlias);
+
+    public static SqlBuilder Del(string alias = null)
+    {
+      var sql = new SqlBuilder().Delete();
+
+      if(!string.IsNullOrWhiteSpace(alias))
+      {
+        sql.Delete(alias);
+      }
+
+      return sql;
     }
 
     /// <summary>
@@ -325,23 +345,6 @@ namespace Sequel
       AddClause("where", string.Join(" AND ", predicates), " AND ", "WHERE ", null);
 
     /// <summary>
-    /// WHERE [AND] predicates from anonymous object.
-    /// Only supports "=" comparison.
-    /// </summary>
-    /// <param name="param"></param>
-    /// <returns></returns>
-    public SqlBuilder Where(object param)
-    {
-      if(TryGetPredicatesFromProps(param, out string[] predicates) && predicates.Length > 0)
-      {        
-        Where(predicates);
-      }
-
-      return this;
-    }
-      
-
-    /// <summary>
     /// WHERE [OR] predicates
     /// </summary>
     /// <param name="predicates"></param>
@@ -363,26 +366,6 @@ namespace Sequel
       clauseSet.Add(new SqlClause(sql, singular ? null : glue));
 
       return this;
-    }
-
-    private bool TryGetPredicatesFromProps(object predicates, out string[] p)
-    {
-      p = new string[] { };
-      bool success = false;
-      var propPredicates = predicates?.GetType().GetRuntimeProperties();
-      
-      if(propPredicates != null)
-      {
-        success = true;        
-        int i = 0;
-
-        foreach(var propPredicate in propPredicates)
-        {
-          p[i] = propPredicate.Name + " = @" + propPredicate.Name;
-        }
-      }
-
-      return success;
     }
   }
 }
