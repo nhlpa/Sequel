@@ -2,12 +2,13 @@
 using System.Text.RegularExpressions;
 
 namespace Sequel
-{
-  public class SqlBuilder
   {
-    private string template;
+  public class SqlBuilder
+    {
+    private string _tmpl;
+    private readonly IDictionary<string, SqlClauseSet> _clauses = new Dictionary<string, SqlClauseSet>();
 
-    private readonly IDictionary<string, string> templates = new Dictionary<string, string>()
+    private static readonly IDictionary<string, string> _templates = new Dictionary<string, string>()
     {
       { "select", "||select|| ||top|| ||fields|| ||from|| ||join|| ||where|| ||groupby|| ||having|| ||orderby|| ||limit||" },
       { "insert", "||insert|| ||columns|| ||values||" },
@@ -15,24 +16,22 @@ namespace Sequel
       { "delete", "||delete|| ||from|| ||join|| ||where||" }
     };
 
-    private readonly IDictionary<string, SqlClauseSet> clauses = new Dictionary<string, SqlClauseSet>();
-
     /// <summary>
     /// Using default templates
     /// </summary>
     public SqlBuilder()
-    {
-      template = templates["select"];
-    }
+      {
+      _tmpl = _templates["select"];
+      }
 
     /// <summary>
     /// Using custom template
     /// </summary>
     /// <param name="template"></param>
     public SqlBuilder(string template)
-    {
-      this.template = template;
-    }
+      {
+      _tmpl = template;
+      }
 
     /// <summary>
     /// Render SQL statement as string
@@ -46,37 +45,22 @@ namespace Sequel
     /// </summary>
     /// <returns></returns>
     public string ToSql()
-    {
-      foreach (var clauseSet in clauses)
       {
-        template = Regex.Replace(template, "\\|\\|" + clauseSet.Key + "\\|\\|", clauseSet.Value.ToSql(), RegexOptions.IgnoreCase);
+      foreach (var clauseSet in _clauses)
+        {
+        _tmpl = Regex.Replace(_tmpl, Concat("\\|\\|", clauseSet.Key, "\\|\\|"), clauseSet.Value.ToSql(), RegexOptions.IgnoreCase);
+        }
+
+      _tmpl = Regex.Replace(_tmpl, @"\|\|[a-z]+\|\|\s{0,1}", "").Trim();
+
+      return _tmpl;
       }
 
-      template = Regex.Replace(template, @"\|\|[a-z]+\|\|\s{0,1}", "").Trim();
+    public SqlBuilder CrossApply(string tvf, string alias)
+      => AddClause("join", Concat(tvf, " AS ", alias), " CROSS APPLY ", null, null, false);
 
-      return template;
-    }
-
-    public static SqlBuilder Sel(params string[] columns) =>
-      new SqlBuilder().Select(columns);
-
-    public static SqlBuilder Ins(string table)
-      => new SqlBuilder().Insert(table);
-
-    public static SqlBuilder Upd(string tableOrAlias)
-      => new SqlBuilder().Update(tableOrAlias);
-
-    public static SqlBuilder Del(string alias = null)
-    {
-      var sql = new SqlBuilder().Delete();
-
-      if(!string.IsNullOrWhiteSpace(alias))
-      {
-        sql.Delete(alias);
-      }
-
-      return sql;
-    }
+    public SqlBuilder CrossApply(SqlBuilder sqlBuilder, string alias)
+      => AddClause("join", Concat(sqlBuilder.ToSql(), " AS ", alias), " CROSS APPLY ", null, null, false);
 
     /// <summary>
     /// Register columns for INSERT
@@ -92,7 +76,7 @@ namespace Sequel
     /// <param name="sqlBuilder"></param>
     /// <returns></returns>
     public SqlBuilder Exists(SqlBuilder sqlBuilder) =>
-      Where("EXISTS (" + sqlBuilder.ToSql() + ")");
+      Where(Concat("EXISTS (", sqlBuilder.ToSql(), ")"));
 
     /// <summary>
     /// EXISTS predicate
@@ -100,7 +84,7 @@ namespace Sequel
     /// <param name="predicate"></param>
     /// <returns></returns>
     public SqlBuilder Exists(string predicate) =>
-      Where("EXISTS (" + predicate + ")");
+      Where(Concat("EXISTS (", predicate, ")"));
 
     /// <summary>
     /// FROM table
@@ -117,7 +101,7 @@ namespace Sequel
     /// <param name="alias"></param>
     /// <returns></returns>
     public SqlBuilder From(string table, string alias) =>
-      From(table + " AS " + alias);
+      From(Concat(table, " AS ", alias));
 
     /// <summary>
     /// FROM derived table
@@ -133,10 +117,10 @@ namespace Sequel
     /// </summary>
     /// <returns></returns>
     public SqlBuilder Delete()
-    {
-      template = templates["delete"];
+      {
+      _tmpl = _templates["delete"];
       return AddClause("delete", "", null, "DELETE ", null);
-    }
+      }
 
     /// <summary>
     /// DELETE from alias
@@ -144,10 +128,10 @@ namespace Sequel
     /// <param name="alias"></param>
     /// <returns></returns>
     public SqlBuilder Delete(string alias)
-    {
-      template = templates["delete"];
+      {
+      _tmpl = _templates["delete"];
       return AddClause("delete", alias, null, "DELETE ", null);
-    }
+      }
 
     /// <summary>
     /// GROUP BY columns
@@ -171,10 +155,10 @@ namespace Sequel
     /// <param name="table"></param>
     /// <returns></returns>
     public SqlBuilder Insert(string table)
-    {
-      template = templates["insert"];
+      {
+      _tmpl = _templates["insert"];
       return AddClause("insert", table, null, "INSERT INTO ", null);
-    }
+      }
 
     /// <summary>
     /// [INNER] JOIN table and predicate
@@ -191,7 +175,7 @@ namespace Sequel
     /// <param name="predicate"></param>
     /// <returns></returns>
     public SqlBuilder Join(string table, string predicate) =>
-      Join(table + " ON " + predicate);
+      Join(Concat(table, " ON ", predicate));
 
     /// <summary>
     /// [INNER] JOIN table with alias and predicate
@@ -201,7 +185,17 @@ namespace Sequel
     /// <param name="predicate"></param>
     /// <returns></returns>
     public SqlBuilder Join(string table, string alias, string predicate) =>
-      Join(table + " AS " + alias + " ON " + predicate);
+      Join(Concat(table, " AS ", alias, " ON ", predicate));
+
+    /// <summary>
+    /// [INNER] JOIN table from SqlBuilder with alias and predicate
+    /// </summary>
+    /// <param name="table"></param>
+    /// <param name="alias"></param>
+    /// <param name="predicate"></param>
+    /// <returns></returns>
+    public SqlBuilder Join(SqlBuilder derivedTable, string alias, string predicate) =>
+      Join(Concat("FROM (", derivedTable.ToSql(), ")"), alias, predicate);
 
     /// <summary>
     /// LEFT JOIN table and predicate
@@ -218,7 +212,7 @@ namespace Sequel
     /// <param name="predicate"></param>
     /// <returns></returns>
     public SqlBuilder LeftJoin(string table, string predicate) =>
-      LeftJoin(table + " ON " + predicate);
+      LeftJoin(Concat(table, " ON ", predicate));
 
     /// <summary>
     /// LEFT JOIN table with alias and predicate
@@ -228,7 +222,17 @@ namespace Sequel
     /// <param name="predicate"></param>
     /// <returns></returns>
     public SqlBuilder LeftJoin(string table, string alias, string predicate) =>
-      LeftJoin(table + " AS " + alias + " ON " + predicate);
+      LeftJoin(Concat(table, " AS ", alias, " ON ", predicate));
+
+    /// <summary>
+    /// LEFT JOIN table from SqlBuilder with alias and predicate
+    /// </summary>
+    /// <param name="table"></param>
+    /// <param name="alias"></param>
+    /// <param name="predicate"></param>
+    /// <returns></returns>
+    public SqlBuilder LeftJoin(SqlBuilder derivedTable, string alias, string predicate) =>
+      LeftJoin(Concat("FROM (", derivedTable.ToSql(), ")"), alias, predicate);
 
     /// <summary>
     /// LIMIT by n rows
@@ -252,15 +256,52 @@ namespace Sequel
     /// <param name="columns"></param>
     /// <returns></returns>
     public SqlBuilder OrderByDesc(params string[] columns)
-    {
+      {
       string[] columnsDesc = new string[columns.Length];
       for (var i = 0; i < columns.Length; i++)
-      {
+        {
         columnsDesc[i] = columns[i] + " DESC";
-      }
+        }
 
       return AddClause("orderby", columnsDesc, ", ", "ORDER BY ", null);
-    }
+      }
+
+    /// <summary>
+    /// RIGHT JOIN table and predicate
+    /// </summary>
+    /// <param name="tableAndPredicate"></param>
+    /// <returns></returns>
+    public SqlBuilder RightJoin(string tableAndPredicate) =>
+      AddClause("join", tableAndPredicate, " RIGHT JOIN ", null, null, false);
+
+    /// <summary>
+    /// RIGHT JOIN table with predicate
+    /// </summary>
+    /// <param name="table"></param>
+    /// <param name="predicate"></param>
+    /// <returns></returns>
+    public SqlBuilder RightJoin(string table, string predicate) =>
+      RightJoin(Concat(table, " ON ", predicate));
+
+    /// <summary>
+    /// RIGHT JOIN table with alias and predicate
+    /// </summary>
+    /// <param name="table"></param>
+    /// <param name="alias"></param>
+    /// <param name="predicate"></param>
+    /// <returns></returns>
+    public SqlBuilder RightJoin(string table, string alias, string predicate) =>
+      RightJoin(Concat(table, " AS ", alias, " ON ", predicate));
+
+    /// <summary>
+    /// RIGHT JOIN table from SqlBuilder with alias and predicate
+    /// </summary>
+    /// <param name="table"></param>
+    /// <param name="alias"></param>
+    /// <param name="predicate"></param>
+    /// <returns></returns>
+    public SqlBuilder RightJoin(SqlBuilder derivedTable, string alias, string predicate) =>
+      RightJoin(Concat("FROM (", derivedTable.ToSql(), ")"), alias, predicate);
 
     /// <summary>
     /// SELECT columns
@@ -268,10 +309,10 @@ namespace Sequel
     /// <param name="columns"></param>
     /// <returns></returns>
     public SqlBuilder Select(params string[] columns)
-    {
+      {
       AddClause("select", string.Empty, string.Empty, "SELECT ", null);
       return AddClause("fields", columns, ", ", null, null);
-    }
+      }
 
     /// <summary>
     /// SELECT columns and apply provided alias
@@ -280,18 +321,18 @@ namespace Sequel
     /// <param name="columns"></param>
     /// <returns></returns>
     public SqlBuilder SelectWithAlias(string alias, params string[] columns)
-    {
+      {
       string[] columnsAliased = new string[columns.Length];
       string aliasProper = (alias[alias.Length - 1] == '.') ? alias : alias + ".";
 
       for (var i = 0; i < columns.Length; i++)
-      {
+        {
         columnsAliased[i] = aliasProper + columns[i];
-      }
+        }
 
       AddClause("select", string.Empty, string.Empty, "SELECT ", null);
       return AddClause("fields", columnsAliased, ", ", null, null);
-    }
+      }
 
     /// <summary>
     /// UPDATE &gt; SET column/value pairs
@@ -307,7 +348,7 @@ namespace Sequel
     /// <param name="n"></param>
     /// <returns></returns>
     public SqlBuilder Top(int n) =>
-      AddClause("top", n.ToString(), null, "TOP ", null, true);
+      AddClause("top", Concat("(", n.ToString(), ")"), null, "TOP ", null, true);
 
     /// <summary>
     /// UPDATE table
@@ -315,10 +356,10 @@ namespace Sequel
     /// <param name="tableOrAlias"></param>
     /// <returns></returns>
     public SqlBuilder Update(string tableOrAlias)
-    {
-      template = templates["update"];
+      {
+      _tmpl = _templates["update"];
       return AddClause("update", tableOrAlias, null, "UPDATE ", null);
-    }
+      }
 
     /// <summary>
     /// INSERT single record
@@ -356,16 +397,21 @@ namespace Sequel
       AddClause(keyword, string.Join(", ", sql), glue, pre, post, singular);
 
     private SqlBuilder AddClause(string keyword, string sql, string glue, string pre, string post, bool singular = true)
-    {
-      if (!clauses.TryGetValue(keyword, out SqlClauseSet clauseSet))
       {
+      if (!_clauses.TryGetValue(keyword, out SqlClauseSet clauseSet))
+        {
         clauseSet = new SqlClauseSet(glue, pre, post, singular);
-        clauses[keyword] = clauseSet;
-      }
+        _clauses[keyword] = clauseSet;
+        }
 
       clauseSet.Add(new SqlClause(sql, singular ? null : glue));
 
       return this;
+      }
+
+    private static string Concat(params string[] chunks)
+      {
+      return string.Join("", chunks);
+      }
     }
   }
-}

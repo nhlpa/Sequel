@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 
 namespace Sequel
 {
@@ -19,35 +20,41 @@ namespace Sequel
 
     public string ToSql()
     {
-      var sql = string.Empty;
-
+      var sb = new StringBuilder(Pre);
+      
       if (string.IsNullOrWhiteSpace(Glue))
       {
-        sql = this[Count - 1].Sql;
+        // No glue, likely raw SQL
+        sb.Append(this[Count - 1].Sql);
       }
       else if (!Singular)
       {
+        // Not singular, add each clause and prepend glue
         for (var i = 0; i < Count; i++)
         {
-          sql += this[i].Glue + this[i].Sql;
+          sb.Append(this[i].Glue);
+          sb.Append(this[i].Sql);
         }
       }
       else
       {
+        // Singular, add each clause and prepend glue for all but first item
         for (var i = 0; i < Count; i++)
         {
           if (i == 0)
           {
-            sql += this[i].Sql;
+            sb.Append(this[i].Sql);            
           }
           else
           {
-            sql += Glue + this[i].Sql;
+            sb.Append(Glue);
+            sb.Append(this[i].Sql);
           }
         }
       }
 
-      return string.Join("", Pre, sql, Post).Trim();
+      sb.Append(Post);
+      return sb.ToString().Trim();
     }
   }
 }

@@ -46,7 +46,7 @@ namespace Sequel.Tests
 
       var result = sqlBuilder.ToSql();
 
-      Assert.Equal("SELECT TOP 5 * FROM dbo.Test", result);
+      Assert.Equal("SELECT TOP (5) * FROM dbo.Test", result);
     }
 
     [Fact]
@@ -424,6 +424,26 @@ namespace Sequel.Tests
       var result = sqlBuilder.ToSql();
 
       Assert.Equal("SELECT * FROM dbo.Test t INNER JOIN dbo.Employee e on e.Id = t.EmployeeId LEFT JOIN dbo.Manager m on m.Id = e.ManagerId", result);
+    }
+
+    [Fact]
+    public void CrossApplySqlBuilderTest()
+    {
+      var ca = new SqlBuilder()
+        .Select("t.TestId")
+        .Top(1)
+        .From("Test", "t")
+        .Where("t.TestId = ot.TestId")
+        .OrderByDesc("Modified");
+
+      var q = new SqlBuilder()
+        .Select("ot.TestId")
+        .From("OuterTest", "ot")
+        .CrossApply(ca, "t");
+
+      var result = q.ToSql();
+      System.Console.WriteLine(result);
+      Assert.Equal("SELECT ot.TestId FROM OuterTest AS ot CROSS APPLY (SELECT TOP (1) t.TestId FROM Test AS t WHERE t.TestId = ot.TestId ORDER BY Modified DESC) AS t", result);
     }
 
     [Fact]
