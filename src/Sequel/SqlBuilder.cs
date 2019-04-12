@@ -56,12 +56,6 @@ namespace Sequel
       return _tmpl;
       }
 
-    public SqlBuilder CrossApply(string tvf, string alias)
-      => AddClause("join", Concat(tvf, " AS ", alias), " CROSS APPLY ", null, null, false);
-
-    public SqlBuilder CrossApply(SqlBuilder sqlBuilder, string alias)
-      => AddClause("join", Concat(sqlBuilder.ToSql(), " AS ", alias), " CROSS APPLY ", null, null, false);
-
     /// <summary>
     /// Register columns for INSERT
     /// </summary>
@@ -235,14 +229,6 @@ namespace Sequel
       LeftJoin(Concat("FROM (", derivedTable.ToSql(), ")"), alias, predicate);
 
     /// <summary>
-    /// LIMIT by n rows
-    /// </summary>
-    /// <param name="n"></param>
-    /// <returns></returns>
-    public SqlBuilder Limit(int n) =>
-      AddClause("limit", n.ToString(), null, "LIMIT ", null, true);
-
-    /// <summary>
     /// ORDER BY columns
     /// </summary>
     /// <param name="columns"></param>
@@ -343,14 +329,6 @@ namespace Sequel
       AddClause("set", columnAndValuePairs, ", ", "SET ", null);
 
     /// <summary>
-    /// TOP n rows
-    /// </summary>
-    /// <param name="n"></param>
-    /// <returns></returns>
-    public SqlBuilder Top(int n) =>
-      AddClause("top", Concat("(", n.ToString(), ")"), null, "TOP ", null, true);
-
-    /// <summary>
     /// UPDATE table
     /// </summary>
     /// <param name="tableOrAlias"></param>
@@ -393,10 +371,10 @@ namespace Sequel
     public SqlBuilder WhereOr(params string[] predicates) =>
       AddClause("where", string.Join(" OR ", predicates), " OR ", "WHERE ", null);
 
-    private SqlBuilder AddClause(string keyword, string[] sql, string glue, string pre, string post, bool singular = true) =>
+    internal SqlBuilder AddClause(string keyword, string[] sql, string glue, string pre, string post, bool singular = true) =>
       AddClause(keyword, string.Join(", ", sql), glue, pre, post, singular);
 
-    private SqlBuilder AddClause(string keyword, string sql, string glue, string pre, string post, bool singular = true)
+    internal SqlBuilder AddClause(string keyword, string sql, string glue, string pre, string post, bool singular = true)
       {
       if (!_clauses.TryGetValue(keyword, out SqlClauseSet clauseSet))
         {
@@ -409,7 +387,7 @@ namespace Sequel
       return this;
       }
 
-    private static string Concat(params string[] chunks)
+    internal static string Concat(params string[] chunks)
       {
       return string.Join("", chunks);
       }
