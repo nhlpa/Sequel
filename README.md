@@ -4,15 +4,6 @@
 
 [SeQueL](https://github.com/pimbrouwers/sequel) is a **blazing** fast SQL builder with an interface that emulates writing actual SQL queries.
 
-It comes bundled with an `ISqlMapper<TEntity>` which can be used to generate metadata for domain classes. Yielding:
-- Table name
-- Key column
-- Fields 
-- Fields excluding key
-- Fields qualified by table name
-- Non-key fields qualified by table name
-- `SqlBuilder` representing `CREATE` / `UPDATE` / `READ` / `DELETE`  for domain class for straight-forward CRUD application
-
 ## Getting Started
 ### `SELECT`
 
