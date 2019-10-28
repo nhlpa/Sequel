@@ -1,20 +1,29 @@
-﻿using Xunit;
+﻿using System.Text;
+using Xunit;
 
 namespace Sequel.Tests
-  {
+{
   public class SqlBuilderTests
+  {
+    [Fact]
+    public void ToSqlEqualsToString()
     {
+      var sql = new SqlBuilder().Select("1");
+
+      Assert.Equal(sql.ToString(), sql.ToSql());
+    }
+
     [Fact]
     public void EmptyBuilderTest()
-      {
+    {
       var sqlBuilder = new SqlBuilder();
 
       Assert.Equal(sqlBuilder.ToSql(), "");
-      }
+    }
 
     [Fact]
     public void SelectStarTest()
-      {
+    {
       var sqlBuilder = new SqlBuilder()
                            .Select("*")
                            .From("dbo.Test");
@@ -22,11 +31,11 @@ namespace Sequel.Tests
       var result = sqlBuilder.ToSql();
 
       Assert.Equal("SELECT * FROM dbo.Test", result);
-      }
+    }
 
     [Fact]
     public void SelectStarTestFromAlias()
-      {
+    {
       var sqlBuilder = new SqlBuilder()
                            .Select("*")
                            .From("dbo.Test", "t");
@@ -34,37 +43,11 @@ namespace Sequel.Tests
       var result = sqlBuilder.ToSql();
 
       Assert.Equal("SELECT * FROM dbo.Test AS t", result);
-      }
-
-    [Fact]
-    public void SelectStarTopTest()
-      {
-      var sqlBuilder = new SqlBuilder()
-                           .Select("*")
-                           .Top(5)
-                           .From("dbo.Test");
-
-      var result = sqlBuilder.ToSql();
-
-      Assert.Equal("SELECT TOP (5) * FROM dbo.Test", result);
-      }
-
-    [Fact]
-    public void SelectStarLimitTest()
-      {
-      var sqlBuilder = new SqlBuilder()
-                           .Select("*")
-                           .From("dbo.Test")
-                           .Limit(5);
-
-      var result = sqlBuilder.ToSql();
-
-      Assert.Equal("SELECT * FROM dbo.Test LIMIT 5", result);
-      }
+    }
 
     [Fact]
     public void SelectStarWhereTest()
-      {
+    {
       var sqlBuilder = new SqlBuilder()
                            .Select("*")
                            .From("dbo.Test")
@@ -73,11 +56,11 @@ namespace Sequel.Tests
       var result = sqlBuilder.ToSql();
 
       Assert.Equal("SELECT * FROM dbo.Test WHERE Id = 1", result);
-      }
+    }
 
     [Fact]
     public void SelectStarWhereMultipleTest()
-      {
+    {
       var sqlBuilder = new SqlBuilder()
                  .Select("*")
                  .From("dbo.Test")
@@ -87,11 +70,11 @@ namespace Sequel.Tests
       var result = sqlBuilder.ToSql();
 
       Assert.Equal("SELECT * FROM dbo.Test WHERE Id = 1 AND Num = 2", result);
-      }
+    }
 
     [Fact]
     public void SelectStarWhereMultipleParamsTest()
-      {
+    {
       var sqlBuilder = new SqlBuilder()
                  .Select("*")
                  .From("dbo.Test")
@@ -100,11 +83,11 @@ namespace Sequel.Tests
       var result = sqlBuilder.ToSql();
 
       Assert.Equal("SELECT * FROM dbo.Test WHERE Id = 1 AND Num = 2", result);
-      }
+    }
 
     [Fact]
     public void SelectStarWhereOrTest()
-      {
+    {
       var sqlBuilder = new SqlBuilder()
                            .Select("*")
                            .From("dbo.Test")
@@ -114,11 +97,11 @@ namespace Sequel.Tests
       var result = sqlBuilder.ToSql();
 
       Assert.Equal("SELECT * FROM dbo.Test WHERE Id = 1 OR Salary = 50", result);
-      }
+    }
 
     [Fact]
     public void SelectStarWhereOrParamsTest()
-      {
+    {
       var sqlBuilder = new SqlBuilder()
                  .Select("*")
                  .From("dbo.Test")
@@ -127,11 +110,11 @@ namespace Sequel.Tests
       var result = sqlBuilder.ToSql();
 
       Assert.Equal("SELECT * FROM dbo.Test WHERE Id = 1 OR Salary = 50", result);
-      }
+    }
 
     [Fact]
     public void SelectStarWhereExistsTest()
-      {
+    {
       var sqlBuilder = new SqlBuilder()
                            .Select("*")
                            .From("dbo.Test t")
@@ -140,11 +123,11 @@ namespace Sequel.Tests
       var result = sqlBuilder.ToSql();
 
       Assert.Equal("SELECT * FROM dbo.Test t WHERE EXISTS (select null from dbo.Employee e where e.Id = t.EmployeeId)", result);
-      }
+    }
 
     [Fact]
     public void SelectMultipleTest()
-      {
+    {
       var sqlBuilder = new SqlBuilder()
                            .Select("Id")
                            .Select("Salary")
@@ -153,11 +136,11 @@ namespace Sequel.Tests
       var result = sqlBuilder.ToSql();
 
       Assert.Equal("SELECT Id, Salary FROM dbo.Test", result);
-      }
+    }
 
     [Fact]
     public void SelectMultipleParamsTest()
-      {
+    {
       var sqlBuilder = new SqlBuilder()
                            .Select("Id", "Salary")
                            .From("dbo.Test");
@@ -165,11 +148,11 @@ namespace Sequel.Tests
       var result = sqlBuilder.ToSql();
 
       Assert.Equal("SELECT Id, Salary FROM dbo.Test", result);
-      }
+    }
 
     [Fact]
     public void SelectWithAliasTest()
-      {
+    {
       string alias = "t";
       string[] columns = new string[] { "Id", "Salary" };
       var sqlBuilder = new SqlBuilder()
@@ -184,11 +167,11 @@ namespace Sequel.Tests
       Assert.Equal("t", alias);
       Assert.Equal("Id", columns[0]);
       Assert.Equal("Salary", columns[1]);
-      }
+    }
 
     [Fact]
     public void SelectWithAliasMultipleTest()
-      {
+    {
       var sqlBuilder = new SqlBuilder()
                            .SelectWithAlias("t", "Id")
                            .SelectWithAlias("t", "Salary")
@@ -197,11 +180,11 @@ namespace Sequel.Tests
       var result = sqlBuilder.ToSql();
 
       Assert.Equal("SELECT t.Id, t.Salary FROM dbo.Test t", result);
-      }
+    }
 
     [Fact]
     public void SelectGroupByTest()
-      {
+    {
       var sqlBuilder = new SqlBuilder()
                            .Select("Id")
                            .Select("Count(Salary) as TotalSalary")
@@ -211,11 +194,11 @@ namespace Sequel.Tests
       var result = sqlBuilder.ToSql();
 
       Assert.Equal("SELECT Id, Count(Salary) as TotalSalary FROM dbo.Test GROUP BY Id", result);
-      }
+    }
 
     [Fact]
     public void SelectGroupByHavingTest()
-      {
+    {
       var sqlBuilder = new SqlBuilder()
                            .Select("Id")
                            .Select("Count(Salary) as TotalSalary")
@@ -226,11 +209,11 @@ namespace Sequel.Tests
       var result = sqlBuilder.ToSql();
 
       Assert.Equal("SELECT Id, Count(Salary) as TotalSalary FROM dbo.Test GROUP BY Id HAVING Count(Salary) > 100", result);
-      }
+    }
 
     [Fact]
     public void SelectOrderByTest()
-      {
+    {
       var sqlBuilder = new SqlBuilder()
                            .Select("*")
                            .From("dbo.Test")
@@ -239,11 +222,11 @@ namespace Sequel.Tests
       var result = sqlBuilder.ToSql();
 
       Assert.Equal("SELECT * FROM dbo.Test ORDER BY Id", result);
-      }
+    }
 
     [Fact]
     public void SelectOrderByDescTest()
-      {
+    {
       string orderByDesc = "Id";
       var sqlBuilder = new SqlBuilder()
                            .Select("*")
@@ -255,11 +238,11 @@ namespace Sequel.Tests
       Assert.Equal("SELECT * FROM dbo.Test ORDER BY Id DESC", result);
 
       Assert.Equal("Id", orderByDesc);
-      }
+    }
 
     [Fact]
     public void SelectOrderByMultipleTest()
-      {
+    {
       var sqlBuilder = new SqlBuilder()
                            .Select("*")
                            .From("dbo.Test")
@@ -269,11 +252,11 @@ namespace Sequel.Tests
       var result = sqlBuilder.ToSql();
 
       Assert.Equal("SELECT * FROM dbo.Test ORDER BY Id, Salary", result);
-      }
+    }
 
     [Fact]
     public void SelectOrderByDescMultipleTest()
-      {
+    {
       var sqlBuilder = new SqlBuilder()
                            .Select("*")
                            .From("dbo.Test")
@@ -283,11 +266,11 @@ namespace Sequel.Tests
       var result = sqlBuilder.ToSql();
 
       Assert.Equal("SELECT * FROM dbo.Test ORDER BY Id DESC, Salary DESC", result);
-      }
+    }
 
     [Fact]
     public void SelectOrderByMultipleMixedTest()
-      {
+    {
       var sqlBuilder = new SqlBuilder()
                            .Select("*")
                            .From("dbo.Test")
@@ -297,11 +280,11 @@ namespace Sequel.Tests
       var result = sqlBuilder.ToSql();
 
       Assert.Equal("SELECT * FROM dbo.Test ORDER BY Id, Salary DESC", result);
-      }
+    }
 
     [Fact]
     public void FromSqlBuilderTest()
-      {
+    {
       var sqlBuilder1 = new SqlBuilder()
                            .Select("*")
                            .From("dbo.Test")
@@ -314,11 +297,11 @@ namespace Sequel.Tests
       var result = sqlBuilder2.ToSql();
 
       Assert.Equal("SELECT * FROM (SELECT * FROM dbo.Test WHERE Id = 1) as t1", result);
-      }
+    }
 
     [Fact]
     public void WhereExistsSqlBuilderTest()
-      {
+    {
       var sqlBuilder1 = new SqlBuilder()
                            .Select("null")
                            .From("dbo.Test")
@@ -332,11 +315,11 @@ namespace Sequel.Tests
       var result = sqlBuilder2.ToSql();
 
       Assert.Equal("SELECT * FROM dbo.Test WHERE EXISTS (SELECT null FROM dbo.Test WHERE Salary > 50)", result);
-      }
+    }
 
     [Fact]
     public void JoinTest()
-      {
+    {
       var sqlBuilder = new SqlBuilder()
                           .Select("*")
                           .From("dbo.Test t")
@@ -345,11 +328,11 @@ namespace Sequel.Tests
       var result = sqlBuilder.ToSql();
 
       Assert.Equal("SELECT * FROM dbo.Test t INNER JOIN dbo.Employee e on e.Id = t.EmployeeId", result);
-      }
+    }
 
     [Fact]
     public void JoinPedicateTest()
-      {
+    {
       var sqlBuilder = new SqlBuilder()
                           .Select("*")
                           .From("dbo.Test t")
@@ -358,11 +341,11 @@ namespace Sequel.Tests
       var result = sqlBuilder.ToSql();
 
       Assert.Equal("SELECT * FROM dbo.Test t INNER JOIN dbo.Employee e ON e.Id = t.EmployeeId", result);
-      }
+    }
 
     [Fact]
     public void JoinAliasPredicateTest()
-      {
+    {
       var sqlBuilder = new SqlBuilder()
                           .Select("*")
                           .From("dbo.Test t")
@@ -371,11 +354,26 @@ namespace Sequel.Tests
       var result = sqlBuilder.ToSql();
 
       Assert.Equal("SELECT * FROM dbo.Test t INNER JOIN dbo.Employee AS e ON e.Id = t.EmployeeId", result);
-      }
+    }
+
+    [Fact]
+    public void JoinSqlBuilderTest()
+    {
+      var emp = new SqlBuilder().Select("*").From("dbo.Employee");
+
+      var sqlBuilder = new SqlBuilder()
+                          .Select("*")
+                          .From("dbo.Test t")
+                          .Join(emp, "e", "e.Id = t.EmployeeId");
+
+      var result = sqlBuilder.ToSql();
+
+      Assert.Equal("SELECT * FROM dbo.Test t INNER JOIN (SELECT * FROM dbo.Employee) AS e ON e.Id = t.EmployeeId", result);
+    }
 
     [Fact]
     public void LeftJoinTest()
-      {
+    {
       var sqlBuilder = new SqlBuilder()
                           .Select("*")
                           .From("dbo.Test t")
@@ -384,11 +382,11 @@ namespace Sequel.Tests
       var result = sqlBuilder.ToSql();
 
       Assert.Equal("SELECT * FROM dbo.Test t LEFT JOIN dbo.Employee e on e.Id = t.EmployeeId", result);
-      }
+    }
 
     [Fact]
     public void LeftJoinPedicateTest()
-      {
+    {
       var sqlBuilder = new SqlBuilder()
                           .Select("*")
                           .From("dbo.Test t")
@@ -397,11 +395,11 @@ namespace Sequel.Tests
       var result = sqlBuilder.ToSql();
 
       Assert.Equal("SELECT * FROM dbo.Test t LEFT JOIN dbo.Employee e ON e.Id = t.EmployeeId", result);
-      }
+    }
 
     [Fact]
     public void LeftJoinAliasPredicateTest()
-      {
+    {
       var sqlBuilder = new SqlBuilder()
                           .Select("*")
                           .From("dbo.Test t")
@@ -410,11 +408,26 @@ namespace Sequel.Tests
       var result = sqlBuilder.ToSql();
 
       Assert.Equal("SELECT * FROM dbo.Test t LEFT JOIN dbo.Employee AS e ON e.Id = t.EmployeeId", result);
-      }
+    }
+
+    [Fact]
+    public void LeftJoinSqlBuilderTest()
+    {
+      var emp = new SqlBuilder().Select("*").From("dbo.Employee");
+
+      var sqlBuilder = new SqlBuilder()
+                          .Select("*")
+                          .From("dbo.Test t")
+                          .LeftJoin(emp, "e", "e.Id = t.EmployeeId");
+
+      var result = sqlBuilder.ToSql();
+
+      Assert.Equal("SELECT * FROM dbo.Test t LEFT JOIN (SELECT * FROM dbo.Employee) AS e ON e.Id = t.EmployeeId", result);
+    }
 
     [Fact]
     public void JoinLeftJoinTest()
-      {
+    {
       var sqlBuilder = new SqlBuilder()
                           .Select("*")
                           .From("dbo.Test t")
@@ -424,31 +437,11 @@ namespace Sequel.Tests
       var result = sqlBuilder.ToSql();
 
       Assert.Equal("SELECT * FROM dbo.Test t INNER JOIN dbo.Employee e on e.Id = t.EmployeeId LEFT JOIN dbo.Manager m on m.Id = e.ManagerId", result);
-      }
-
-    [Fact]
-    public void CrossApplySqlBuilderTest()
-      {
-      var ca = new SqlBuilder()
-        .Select("t.TestId")
-        .Top(1)
-        .From("Test", "t")
-        .Where("t.TestId = ot.TestId")
-        .OrderByDesc("Modified");
-
-      var q = new SqlBuilder()
-        .Select("ot.TestId")
-        .From("OuterTest", "ot")
-        .CrossApply(ca, "t");
-
-      var result = q.ToSql();
-      System.Console.WriteLine(result);
-      Assert.Equal("SELECT ot.TestId FROM OuterTest AS ot CROSS APPLY (SELECT TOP (1) t.TestId FROM Test AS t WHERE t.TestId = ot.TestId ORDER BY Modified DESC) AS t", result);
-      }
+    }
 
     [Fact]
     public void UpdateTest()
-      {
+    {
       var sqlBuilder = new SqlBuilder()
                           .Update("dbo.Test")
                           .Set("Salary = 100")
@@ -457,11 +450,11 @@ namespace Sequel.Tests
       var result = sqlBuilder.ToSql();
 
       Assert.Equal("UPDATE dbo.Test SET Salary = 100 WHERE EmployeeId = 1", result);
-      }
+    }
 
     [Fact]
     public void UpdateMultipleTest()
-      {
+    {
       var sqlBuilder = new SqlBuilder()
                           .Update("dbo.Test")
                           .Set("Salary = 100", "ManagerId = 2")
@@ -470,11 +463,11 @@ namespace Sequel.Tests
       var result = sqlBuilder.ToSql();
 
       Assert.Equal("UPDATE dbo.Test SET Salary = 100, ManagerId = 2 WHERE EmployeeId = 1", result);
-      }
+    }
 
     [Fact]
     public void InsertValueTest()
-      {
+    {
       var sqlBuilder = new SqlBuilder()
                           .Insert("dbo.Test")
                           .Into("Name", "Salary")
@@ -483,11 +476,11 @@ namespace Sequel.Tests
       var result = sqlBuilder.ToSql();
 
       Assert.Equal("INSERT INTO dbo.Test (Name, Salary) VALUES ('Pim', 50)", result);
-      }
+    }
 
     [Fact]
     public void InsertMultipleTest()
-      {
+    {
       var sqlBuilder = new SqlBuilder()
                           .Insert("dbo.Test")
                           .Into("Name")
@@ -498,11 +491,11 @@ namespace Sequel.Tests
       var result = sqlBuilder.ToSql();
 
       Assert.Equal("INSERT INTO dbo.Test (Name, Salary) VALUES ('Pim', 50), ('Lindsey', 100)", result);
-      }
+    }
 
     [Fact]
     public void DeleteTest()
-      {
+    {
       var sqlBuilder = new SqlBuilder()
                            .Delete()
                            .From("dbo.Test")
@@ -511,11 +504,26 @@ namespace Sequel.Tests
       var result = sqlBuilder.ToSql();
 
       Assert.Equal("DELETE FROM dbo.Test WHERE Id = 1", result);
-      }
+    }
 
     [Fact]
     public void DeleteJoinTest()
+    {
+      var buildersLen = 10;
+      var builders = new SqlBuilder[buildersLen];
+      var expectedBuilder = new StringBuilder();
+      for (int i = 0; i < buildersLen; i++)
       {
+        builders[i] = new SqlBuilder().Select(i.ToString());
+        expectedBuilder.Append("SELECT ");
+        expectedBuilder.Append(i.ToString());
+
+        if (i < buildersLen - 1)
+        {
+          expectedBuilder.Append(" UNION ");
+        }
+      }
+
       var sqlBuilder = new SqlBuilder()
                           .Delete("t")
                           .From("dbo.Test t")
@@ -525,6 +533,6 @@ namespace Sequel.Tests
       var result = sqlBuilder.ToSql();
 
       Assert.Equal("DELETE t FROM dbo.Test t INNER JOIN dbo.Employee e on e.Id = t.EmployeeId WHERE e.Id = 1", result);
-      }
     }
   }
+}
