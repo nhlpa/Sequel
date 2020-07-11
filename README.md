@@ -2,7 +2,7 @@
 ![NuGet Version](https://img.shields.io/nuget/v/Sequel.svg)
 [![Build Status](https://travis-ci.org/pimbrouwers/sequel.svg?branch=master)](https://travis-ci.org/pimbrouwers/sequel)
 
-[Sequel](https://github.com/pimbrouwers/sequel) is a SQL builder with an interface that emulates writing actual SQL queries.
+A SQL builder with an interface that emulates writing actual SQL queries.
 
 ## Getting Started
 ### `SELECT`
