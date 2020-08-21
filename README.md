@@ -1,6 +1,7 @@
 # Sequel
-![NuGet Version](https://img.shields.io/nuget/v/Sequel.svg)
-[![Build Status](https://travis-ci.org/pimbrouwers/sequel.svg?branch=master)](https://travis-ci.org/pimbrouwers/sequel)
+
+[![NuGet Version](https://img.shields.io/nuget/v/Sequel.svg)](https://www.nuget.org/packages/Sequel)
+[![Build Status](https://travis-ci.org/pimbrouwers/Sequel.svg?branch=master)](https://travis-ci.org/pimbrouwers/Sequel)
 
 A SQL builder with an interface that emulates writing actual SQL queries.
 
