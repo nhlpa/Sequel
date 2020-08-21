@@ -18,7 +18,7 @@ namespace Sequel.Tests
     {
       var sqlBuilder = new SqlBuilder();
 
-      Assert.Equal(sqlBuilder.ToSql(), "");
+      Assert.Equal("", sqlBuilder.ToSql());
     }
 
     [Fact]
@@ -153,8 +153,8 @@ namespace Sequel.Tests
     [Fact]
     public void SelectWithAliasTest()
     {
-      string alias = "t";
-      string[] columns = new string[] { "Id", "Salary" };
+      var alias = "t";
+      var columns = new string[] { "Id", "Salary" };
       var sqlBuilder = new SqlBuilder()
                            .SelectWithAlias(alias, columns)
                            .From("dbo.Test t");
@@ -227,7 +227,7 @@ namespace Sequel.Tests
     [Fact]
     public void SelectOrderByDescTest()
     {
-      string orderByDesc = "Id";
+      var orderByDesc = "Id";
       var sqlBuilder = new SqlBuilder()
                            .Select("*")
                            .From("dbo.Test")
@@ -512,7 +512,7 @@ namespace Sequel.Tests
       var buildersLen = 10;
       var builders = new SqlBuilder[buildersLen];
       var expectedBuilder = new StringBuilder();
-      for (int i = 0; i < buildersLen; i++)
+      for (var i = 0; i < buildersLen; i++)
       {
         builders[i] = new SqlBuilder().Select(i.ToString());
         expectedBuilder.Append("SELECT ");
