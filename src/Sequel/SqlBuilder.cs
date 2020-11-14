@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace Sequel
 {
+    /// <summary>
+    /// SQL builder with an interface that emulates writing actual SQL queries.
+    /// </summary>
     public class SqlBuilder
     {
         private const string _defaultTemplate = "select";
@@ -18,30 +21,24 @@ namespace Sequel
 
         private string[] _template;
         private readonly IDictionary<string, SqlClauseSet> _clauses = new Dictionary<string, SqlClauseSet>();
+        private string _pre;
+        private string _post;
 
         /// <summary>
-        /// Using default templates
+        /// Construct a new instance of SqlBuilder with (optional) pre- and post-SQL
         /// </summary>
-        public SqlBuilder()
+        public SqlBuilder(string pre = null, string post = null)
         {
             SetTemplate(_defaultTemplate);
-        }
-
-        /// <summary>
-        /// Using custom template
-        /// </summary>
-        /// <param name="template"></param>
-        public SqlBuilder(string template)
-        {
-            SetTemplate(template);
+            _pre = pre;
+            _post = post;
         }
 
         /// <summary>
         /// Render SQL statement as string
         /// </summary>
         /// <returns></returns>
-        public override string ToString() =>
-          ToSql();
+        public override string ToString() => ToSql();
 
         /// <summary>
         /// Render SQL statement as string
@@ -49,32 +46,53 @@ namespace Sequel
         /// <returns></returns>
         public string ToSql()
         {
-            return string.Join(" ", _template.Where(key => _clauses.ContainsKey(key)).Select(key => _clauses[key].ToSql()));
+            var templateClauses = 
+                _template
+                    .Where(key => _clauses.ContainsKey(key))
+                    .Select(key => _clauses[key].ToSql());
+
+            var sql = string.Join(" ", templateClauses);
+
+            if(!string.IsNullOrWhiteSpace(_pre) && !string.IsNullOrWhiteSpace(_post))
+            {
+                return string.Concat(string.Concat(_pre, sql), _post);
+            }
+            else if (!string.IsNullOrWhiteSpace(_pre))
+            {
+                return string.Concat(_pre, sql);
+            }
+            else if (!string.IsNullOrWhiteSpace(_post))
+            {
+                return string.Concat(sql, _post);
+            }
+            else {
+                return sql;
+            }
         }
 
-        internal SqlBuilder AddClause(string keyword, string[] sql, string glue, string pre, string post, bool singular = true) =>
-          AddClause(keyword, string.Join(", ", sql), glue, pre, post, singular);
+        internal SqlBuilder AddClause(string keyword, string[] tokens, string glue, string pre, string post, bool singular = true) => 
+            AddClause(keyword, string.Join(", ", tokens), glue, pre, post, singular);
 
-        internal SqlBuilder AddClause(string keyword, string sql, string glue, string pre, string post, bool singular = true)
+        internal SqlBuilder AddClause(string keyword, string token, string glue, string pre, string post, bool singular = true)
         {
-            if (!_clauses.TryGetValue(keyword, out SqlClauseSet clauseSet))
-            {
-                clauseSet = new SqlClauseSet(glue, pre, post, singular);
-                _clauses[keyword] = clauseSet;
+            if (!_clauses.ContainsKey(keyword))
+            {                
+                _clauses[keyword] = new SqlClauseSet(glue, pre, post, singular);
             }
 
-            clauseSet.Add(new SqlClause(sql, singular ? null : glue));
+            _clauses[keyword].Add(new SqlClause(token, singular ? null : glue));
 
             return this;
         }
 
-        internal void SetTemplate(string template)
-          => _template = _templates.ContainsKey(template) ? _templates[template] : throw new ArgumentException("Invalid template");
+        internal void SetTemplate(string template) => 
+            _template = _templates.ContainsKey(template) ? 
+                _templates[template] : 
+                throw new ArgumentException("Invalid template");
 
-        internal static string Concat(params string[] chunks)
-        {
-
-            return string.Join("", chunks);
-        }
+        internal void SetTemplate(string[] template) =>
+            _template = template.Length > 0 ?
+                template :
+                throw new ArgumentException("Custom template has no element");
     }
 }

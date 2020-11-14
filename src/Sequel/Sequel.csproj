@@ -1,26 +1,44 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <Description>A blazing fast SQL builder with an interface that emulates writing actual SQL queries.</Description>
-    <Copyright>2018</Copyright>
-    <PackageLicenseUrl>https://github.com/pimbrouwers/sequel/blob/master/LICENSE</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/pimbrouwers/sequel</PackageProjectUrl>
-    <PackageIconUrl></PackageIconUrl>
-    <RepositoryUrl>https://github.com/pimbrouwers/sequel</RepositoryUrl>
-    <RepositoryType>Git</RepositoryType>
-    <PackageTags>sql query querybuilder fluentquerybuilder</PackageTags>
-    <Version>1.1.5</Version>
-    <AssemblyVersion>1.1.0.0</AssemblyVersion>
-    <FileVersion>1.1.0.0</FileVersion>
-    <PackageReleaseNotes>IDbTransaction extensions and Mapped Repository</PackageReleaseNotes>
-    <PackageId>Sequel</PackageId>
-    <Company>
-    </Company>
-    <Authors>Pim Brouwers</Authors>
+    <AssemblyName>Sequal</AssemblyName>
+    
+    <!-- General Info-->
     <Product>Sequel</Product>
+    <Description>An efficient SQL builder with an interface that emulates writing actual SQL queries.</Description>
+    <Copyright>Copyright 2020 Pim Brouwers</Copyright>
+    <Authors>Pim Brouwers</Authors>
+    <NeutralLanguage>en-CA</NeutralLanguage>
+
+    <!-- Build Config -->    
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <DebugType>portable</DebugType>
+    <OutputType>Library</OutputType>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <IncludeSymbols>true</IncludeSymbols>
+
+    <!-- NuGet config -->
+    <PackageId>Sequel</PackageId>
+    <PackageVersion>3.0.0</PackageVersion>
+    <PackageTags>sql;query;query builder;fluent query builder</PackageTags>
+    <PackageProjectUrl>https://github.com/pimbrouwers/Sequel</PackageProjectUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/pimbrouwers/Sequel</RepositoryUrl>
+    
+    <!-- SourceLink settings -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <Optimize>false</Optimize>
-  </PropertyGroup>
+  
+  <ItemGroup>
+    <Compile Include="SqlClause.cs" />
+    <Compile Include="SqlClauseSet.cs" />
+    <Compile Include="SqlBuilder.cs" />
+    <Compile Include="SqlBuilderExtensions.cs" />
+    <Compile Include="MsSqlBuilderExtensions.cs" />
+    <Compile Include="MySqlBuilderExtensions.cs" />
+  </ItemGroup>
 </Project>

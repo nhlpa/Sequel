@@ -3,7 +3,7 @@
 [![NuGet Version](https://img.shields.io/nuget/v/Sequel.svg)](https://www.nuget.org/packages/Sequel)
 [![Build Status](https://travis-ci.org/pimbrouwers/Sequel.svg?branch=master)](https://travis-ci.org/pimbrouwers/Sequel)
 
-A SQL builder with an interface that emulates writing actual SQL queries.
+An efficient SQL builder with an interface that emulates writing actual SQL queries.
 
 ## Getting Started
 ### `SELECT`
@@ -18,6 +18,19 @@ var sql = sqlBuilder.ToSql(); // .ToString() also works
 /*
 SELECT Id, Salary FROM dbo.Test
 */
+
+// SELECT with INNER & LEFT JOIN
+var sqlBuilder = new SqlBuilder()
+  .Select("*")
+  .From("dbo.Test t")
+  .Join("dbo.Employee e on e.Id = t.EmployeeId")
+  .LeftJoin("dbo.Manager m on m.Id = e.ManagerId");
+
+var sql = sqlBuilder.ToSql();
+
+/*
+SELECT * FROM dbo.Test t INNER JOIN dbo.Employee e on e.Id = t.EmployeeId LEFT JOIN dbo.Manager m on m.Id = e.ManagerId
+*/
 ```
 
 ### `INSERT`
@@ -26,7 +39,8 @@ SELECT Id, Salary FROM dbo.Test
 var sqlBuilder = new SqlBuilder()
   .Insert("dbo.Test")
   .Columns("Name", "Salary")
-  .Values("'John'", "50").Values("'Jane'", "100");
+  .Values("'John'", "50")
+  .Values("'Jane'", "100");
 
 var sql = sqlBuilder.ToSql(); // .ToString() also works
 
@@ -65,43 +79,40 @@ DELETE FROM dbo.Test WHERE EmployeeId = 1
 */
 ```
 
+## Injecting custom SQL
 
-## Custom Templating
+You are granted pre- & post-hooks into the final SQL string literaly, for the purpose of injecting custom SQL.
 
-[sequel](https://github.com/pimbrouwers/sequel) has built-in templates to support the actions listed above, but also supports custom templating for edge cases. To formulate the SQL string, [sequel](https://github.com/pimbrouwers/sequel) uses `||` delimiters surrounding the following keywords:
+The pre-hook is useful in the case of CTE's or inline declarations.
 
-- `||select||`
-- `||fields||`
-- `||from||`
-- `||join||`
-- `||where||`
-- `||groupby||`
-- `||having||`
-- `||orderby|`
-- `||insert||`
-- `||columns||`
-- `||values|`
-- `||update||`
-- `||set||`
-- `||delete||`
+```c#
+var sqlBuilder = new SqlBuilder(pre: "WITH cte AS (SELECT 1) ")
+  .Select("*")
+  .From("cte");
 
-To use `SqlBuilder` with a custom template, provide the template when constructing `new SqlBuilder("YOUR CUSTOM TEMPLATE")`.
+var sql = sqlBuilder.ToSql();
 
-### The default templates are as follows:
+/*
+WITH cte AS (SELECT 1) SELECT * FROM cte"
+*/
+```
 
-#### Select
-`||select|| ||fields|| ||from|| ||join|| ||where|| ||groupby|| ||having|| ||orderby||`
+The post-hook is useful for situations like obtaining the last inserted row identifier.
 
-#### Insert
-`||insert|| ||columns|| ||values||`
+```c#
+var sqlBuilder = new SqlBuilder(post: "; SELECT last_insert_rowid();")
+  .Insert("dbo.Test")
+  .Into("Name", "Salary")
+  .Value("'Pim'", "50");
 
-#### Update
-`||update|| ||set|| ||where||`
+var sql = sqlBuilder.ToSql();
 
-#### Delete
-`||delete|| ||from|| ||join|| ||where||`
+/*
+INSERT INTO dbo.Test (Name, Salary) VALUES ('Pim', 50); SELECT last_insert_rowid();
+*/
+```
 
-## Usage with [dapper.net](https://github.com/StackExchange/Dapper)
+## An example using [Dapper](https://github.com/StackExchange/Dapper)
 
 ```c#
 using(var conn = new SqlConnection("your connection string")

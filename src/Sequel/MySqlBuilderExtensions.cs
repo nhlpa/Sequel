@@ -1,14 +1,21 @@
 ﻿namespace Sequel.MySql
 {
-  public static class MySqlBuilderExtensions
-  {
     /// <summary>
-    /// LIMIT by n rows
+    /// SQL Builder extensions for MySQL/MariaDB
     /// </summary>
-    /// <param name="n"></param>
-    /// <returns></returns>
-    public static SqlBuilder Limit(this SqlBuilder sql, int n) =>
-      sql.AddClause("limit", n.ToString(), null, "LIMIT ", null, true);
+    public static class MySqlBuilderExtensions
+    {
+        /// <summary>
+        /// LIMIT by n rows
+        /// </summary>        
+        public static SqlBuilder Limit(this SqlBuilder sql, int n) =>
+          sql.AddClause(
+              keyword: "limit",
+              token: n.ToString(),
+              glue: null,
+              pre: "LIMIT ",
+              post: null,
+              singular: true);
 
-  }
+    }
 }

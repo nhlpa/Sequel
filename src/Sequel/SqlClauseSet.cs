@@ -1,60 +1,54 @@
 ﻿using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace Sequel
 {
-  public class SqlClauseSet : List<SqlClause>
-  {
-    public SqlClauseSet(string glue, string pre, string post, bool singular = true)
+    internal class SqlClauseSet : List<SqlClause>
     {
-      Glue = glue;
-      Post = post;
-      Pre = pre;
-      Singular = singular;
-    }
-
-    public string Glue { get; }
-    public string Post { get; }
-    public string Pre { get; }
-    public bool Singular { get; }
-
-    public string ToSql()
-    {
-      var sb = new StringBuilder(Pre);
-
-      if (string.IsNullOrWhiteSpace(Glue))
-      {
-        // No glue, likely raw SQL
-        sb.Append(this[Count - 1].Sql);
-      }
-      else if (!Singular)
-      {
-        // Not singular, add each clause and prepend glue
-        for (var i = 0; i < Count; i++)
+        
+        internal SqlClauseSet(string glue, string pre, string post, bool singular = true)
         {
-          sb.Append(this[i].Glue);
-          sb.Append(this[i].Sql);
+            Glue = glue;
+            Post = post;
+            Pre = pre;
+            Singular = singular;
         }
-      }
-      else
-      {
-        // Singular, add each clause and prepend glue for all but first item
-        for (var i = 0; i < Count; i++)
-        {
-          if (i == 0)
-          {
-            sb.Append(this[i].Sql);
-          }
-          else
-          {
-            sb.Append(Glue);
-            sb.Append(this[i].Sql);
-          }
-        }
-      }
 
-      sb.Append(Post);
-      return sb.ToString().Trim();
+        internal string Glue { get; }
+        internal string Post { get; }
+        internal string Pre { get; }
+        internal bool Singular { get; }
+
+        public override string ToString() => ToSql();
+
+        internal string ToSql()
+        {
+            if (Count == 0)
+            {
+                return string.Empty;
+            }
+            else if (!Singular) {
+                return string.Concat(
+                    Pre,
+                    string.Concat(
+                        string.Concat(                            
+                            string.Join(
+                                " ",
+                                Flatten())),
+                        Post));
+            }
+            else
+            {                
+                return string.Concat(
+                    Pre,
+                    string.Concat(
+                        string.Join(
+                            Glue,
+                            Flatten()),
+                        Post));
+            }
+        }
+
+        private string[] Flatten() => this.Select(x => x.ToSql()).ToArray();
     }
-  }
 }
