@@ -1,4 +1,7 @@
-﻿namespace Sequel
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace Sequel
 {
     /// <summary>
     /// SQL builder ANSI extensions
@@ -33,7 +36,6 @@
         /// <summary>
         /// FROM table with alias
         /// </summary>
-
         public static SqlBuilder From(this SqlBuilder sql, string table, string alias) =>
           sql.From(
             table: string.Concat(table, " AS ", alias));
@@ -41,7 +43,6 @@
         /// <summary>
         /// FROM derived table
         /// </summary>
-
         public static SqlBuilder From(this SqlBuilder sql, SqlBuilder derivedTable, string alias) =>
           sql.AddClause(
               keyword: "from",
@@ -53,7 +54,6 @@
         /// <summary>
         /// DELETE clause
         /// </summary>
-
         public static SqlBuilder Delete(this SqlBuilder sql)
         {
             sql.SetTemplate("delete");
@@ -114,6 +114,7 @@
                 pre: "INSERT INTO ",
                 post: null);
         }
+        
         /// <summary>
         /// Register columns for INSERT
         /// </summary>
@@ -140,7 +141,6 @@
         /// <summary>
         /// [INNER] JOIN table with predicate
         /// </summary>
-
         public static SqlBuilder Join(this SqlBuilder sql, string table, string predicate) =>
           sql.Join(
               tableAndPredicate: string.Concat(table, " ON ", predicate));
@@ -148,8 +148,6 @@
         /// <summary>
         /// [INNER] JOIN table with alias and predicate
         /// </summary>
-
-
         public static SqlBuilder Join(this SqlBuilder sql, string table, string alias, string predicate) =>
           sql.Join(
               tableAndPredicate: string.Concat(table, " AS ", alias, " ON ", predicate));
@@ -157,8 +155,6 @@
         /// <summary>
         /// [INNER] JOIN table from SqlBuilder with alias and predicate
         /// </summary>
-
-
         public static SqlBuilder Join(this SqlBuilder sql, SqlBuilder derivedTable, string alias, string predicate) =>
           sql.Join(
               table: string.Concat("(", derivedTable.ToSql(), ")"),
@@ -180,7 +176,6 @@
         /// <summary>
         /// LEFT JOIN table with predicate
         /// </summary>
-
         public static SqlBuilder LeftJoin(this SqlBuilder sql, string table, string predicate) =>
           sql.LeftJoin(
               tableAndPredicate: string.Concat(table, " ON ", predicate));
@@ -188,8 +183,6 @@
         /// <summary>
         /// LEFT JOIN table with alias and predicate
         /// </summary>
-
-
         public static SqlBuilder LeftJoin(this SqlBuilder sql, string table, string alias, string predicate) =>
           sql.LeftJoin(
               tableAndPredicate: string.Concat(table, " AS ", alias, " ON ", predicate));
@@ -197,8 +190,6 @@
         /// <summary>
         /// LEFT JOIN table from SqlBuilder with alias and predicate
         /// </summary>
-
-
         public static SqlBuilder LeftJoin(this SqlBuilder sql, SqlBuilder derivedTable, string alias, string predicate) =>
           sql.LeftJoin(
               table: string.Concat("(", derivedTable.ToSql(), ")"),
@@ -217,17 +208,42 @@
               post: null);
 
         /// <summary>
+        /// ORDER BY columns
+        /// </summary>
+        public static SqlBuilder OrderByWithAlias(this SqlBuilder sql, string alias, params string[] columns) =>
+          sql.AddClause(
+              keyword: "orderby",
+              tokens: AliasColumns(alias, columns).ToArray(),
+              glue: ", ",
+              pre: "ORDER BY ",
+              post: null);
+
+        /// <summary>
         /// ORDER BY DESC columns (i.e. col desc, col2 desc)
         /// </summary>
         public static SqlBuilder OrderByDesc(this SqlBuilder sql, params string[] columns)
-        {
-            var columnsDesc = new string[columns.Length];
-            for (var i = 0; i < columns.Length; i++)
-            {
-                columnsDesc[i] = columns[i] + " DESC";
-            }
+        {            
+            var descSuffix = " DESC";
+            return sql.AddClause(
+                keyword: "orderby",
+                tokens: columns.Select(c => string.Concat(c, descSuffix)).ToArray(),
+                glue: ", ",
+                pre: "ORDER BY ",
+                post: null);
+        }
 
-            return sql.AddClause("orderby", columnsDesc, ", ", "ORDER BY ", null);
+        /// <summary>
+        /// ORDER BY DESC columns (i.e. col desc, col2 desc)
+        /// </summary>
+        public static SqlBuilder OrderByDescWithAlias(this SqlBuilder sql, string alias, params string[] columns)
+        {
+            var descSuffix = " DESC";
+            return sql.AddClause(
+                keyword: "orderby",
+                tokens: AliasColumns(alias, columns).Select(c => string.Concat(c, descSuffix)).ToArray(),
+                glue: ", ",
+                pre: "ORDER BY ",
+                post: null);
         }
 
         /// <summary>
@@ -245,7 +261,6 @@
         /// <summary>
         /// RIGHT JOIN table with predicate
         /// </summary>
-
         public static SqlBuilder RightJoin(this SqlBuilder sql, string table, string predicate) =>
           sql.RightJoin(
               tableAndPredicate: string.Concat(table, " ON ", predicate));
@@ -253,8 +268,6 @@
         /// <summary>
         /// RIGHT JOIN table with alias and predicate
         /// </summary>
-
-
         public static SqlBuilder RightJoin(this SqlBuilder sql, string table, string alias, string predicate) =>
           sql.RightJoin(
               tableAndPredicate: string.Concat(table, " AS ", alias, " ON ", predicate));
@@ -262,8 +275,6 @@
         /// <summary>
         /// RIGHT JOIN table from SqlBuilder with alias and predicate
         /// </summary>
-
-
         public static SqlBuilder RightJoin(this SqlBuilder sql, SqlBuilder derivedTable, string alias, string predicate) =>
           sql.RightJoin(
               table: string.Concat("(", derivedTable.ToSql(), ")"),
@@ -276,8 +287,7 @@
         public static SqlBuilder Select(this SqlBuilder sql, params string[] columns)
         {
             sql.AddClause(
-                keyword: "select",
-                token: null,
+                keyword: "select",                
                 glue: null,
                 pre: "SELECT",
                 post: null);
@@ -293,32 +303,8 @@
         /// <summary>
         /// SELECT columns and apply provided alias
         /// </summary>
-
-        public static SqlBuilder SelectWithAlias(this SqlBuilder sql, string alias, params string[] columns)
-        {
-            var columnsAliased = new string[columns.Length];
-            var aliasProper = (alias[alias.Length - 1] == '.') ? alias : alias + ".";
-
-            for (var i = 0; i < columns.Length; i++)
-            {
-                columnsAliased[i] = aliasProper + columns[i];
-            }
-
-            return
-                sql
-                .AddClause(
-                    keyword: "select",
-                    string.Empty,
-                    string.Empty,
-                    "SELECT",
-                    null)
-                .AddClause(
-                    keyword: "fields",
-                    tokens: columnsAliased,
-                    glue: ", ",
-                    pre: null,
-                    post: null);
-        }
+        public static SqlBuilder SelectWithAlias(this SqlBuilder sql, string alias, params string[] columns) =>
+            sql.Select(AliasColumns(alias, columns).ToArray());
 
         /// <summary>
         /// UPDATE &gt; SET column/value pairs
@@ -346,26 +332,15 @@
         }
 
         /// <summary>
-        /// INSERT single record
-        /// </summary>
-        public static SqlBuilder Value(this SqlBuilder sql, params string[] columnAndValuePairs) =>
-          sql.AddClause(
-              keyword: "values",
-              tokens: columnAndValuePairs,
-              glue: ", ",
-              pre: "VALUES (",
-              post: ")");
-
-        /// <summary>
         /// INSERT multiple records
         /// </summary>
-        public static SqlBuilder Values(this SqlBuilder sql, params string[] columnAndValuePairs) =>
+        public static SqlBuilder Values(this SqlBuilder sql, params string[] values) =>
           sql.AddClause(
               keyword: "values",
-              tokens: columnAndValuePairs,
-              glue: "), (",
-              pre: "VALUES (",
-              post: ")");
+              token: string.Concat("(", string.Concat(string.Join(", ", values), ")")),
+              glue: ", ",
+              pre: "VALUES ",
+              post: null);
 
         /// <summary>
         /// WHERE [AND] predicates
@@ -388,5 +363,8 @@
               glue: " OR ",
               pre: "WHERE ",
               post: null);
+
+        private static IEnumerable<string> AliasColumns(string alias, string[] columns) =>
+            columns.Select(c => string.Concat(string.Concat(alias, "."), c));
     }
 }

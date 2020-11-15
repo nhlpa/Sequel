@@ -14,8 +14,7 @@
               token: n.ToString(),
               glue: null,
               pre: "LIMIT ",
-              post: null,
-              singular: true);
+              post: null);
 
     }
 }

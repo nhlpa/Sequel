@@ -6,18 +6,18 @@ namespace Sequel
     internal class SqlClauseSet : List<SqlClause>
     {
         
-        internal SqlClauseSet(string glue, string pre, string post, bool singular = true)
+        internal SqlClauseSet(string glue, string pre, string post)
         {
-            Glue = glue;
-            Post = post;
-            Pre = pre;
-            Singular = singular;
+            Glue = glue ?? string.Empty;
+            Post = post ?? string.Empty;
+            Pre = pre ?? string.Empty;
+            //Singular = singular;
         }
 
         internal string Glue { get; }
         internal string Post { get; }
         internal string Pre { get; }
-        internal bool Singular { get; }
+        //internal bool Singular { get; }
 
         public override string ToString() => ToSql();
 
@@ -27,18 +27,18 @@ namespace Sequel
             {
                 return string.Empty;
             }
-            else if (!Singular) {
-                return string.Concat(
-                    Pre,
-                    string.Concat(
-                        string.Concat(                            
-                            string.Join(
-                                " ",
-                                Flatten())),
-                        Post));
-            }
-            else
-            {                
+            //else if (!Singular) {
+            //    return string.Concat(
+            //        Pre,
+            //        string.Concat(
+            //            string.Concat(                            
+            //                string.Join(
+            //                    " ",
+            //                    Flatten())),
+            //            Post));
+            //}
+            //else
+            //{                
                 return string.Concat(
                     Pre,
                     string.Concat(
@@ -46,7 +46,7 @@ namespace Sequel
                             Glue,
                             Flatten()),
                         Post));
-            }
+            //}
         }
 
         private string[] Flatten() => this.Select(x => x.ToSql()).ToArray();

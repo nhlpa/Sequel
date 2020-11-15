@@ -272,14 +272,15 @@ namespace Sequel.Tests
         public void SelectOrderByMultipleMixedTest()
         {
             var sqlBuilder = new SqlBuilder()
-                                 .Select("*")
-                                 .From("dbo.Test")
-                                 .OrderBy("Id")
-                                 .OrderByDesc("Salary");
+                                 .SelectWithAlias("t", "Id")
+                                 .SelectWithAlias("t", "Salary")
+                                 .From("dbo.Test", "t")
+                                 .OrderByWithAlias("t", "Id")
+                                 .OrderByDescWithAlias("t", "Salary");
 
             var result = sqlBuilder.ToSql();
 
-            Assert.Equal("SELECT * FROM dbo.Test ORDER BY Id, Salary DESC", result);
+            Assert.Equal("SELECT t.Id, t.Salary FROM dbo.Test AS t ORDER BY t.Id, t.Salary DESC", result);
         }
 
         [Fact]
@@ -553,7 +554,7 @@ namespace Sequel.Tests
             var sqlBuilder = new SqlBuilder()
                                 .Insert("dbo.Test")
                                 .Into("Name", "Salary")
-                                .Value("'Pim'", "50");
+                                .Values("'Pim'", "50");
 
             var result = sqlBuilder.ToSql();
 
@@ -619,7 +620,7 @@ namespace Sequel.Tests
             var sqlBuilder = new SqlBuilder(post: "; SELECT last_insert_rowid();")
                                 .Insert("dbo.Test")
                                 .Into("Name", "Salary")
-                                .Value("'Pim'", "50");
+                                .Values("'Pim'", "50");
 
             var result = sqlBuilder.ToSql();
 

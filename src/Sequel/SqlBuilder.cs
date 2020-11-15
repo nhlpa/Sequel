@@ -70,17 +70,20 @@ namespace Sequel
             }
         }
 
-        internal SqlBuilder AddClause(string keyword, string[] tokens, string glue, string pre, string post, bool singular = true) => 
-            AddClause(keyword, string.Join(", ", tokens), glue, pre, post, singular);
+        internal SqlBuilder AddClause(string keyword, string glue, string pre, string post, bool singular = true) =>
+            AddClause(keyword, new string[] {}, glue, pre, post, singular);
 
-        internal SqlBuilder AddClause(string keyword, string token, string glue, string pre, string post, bool singular = true)
+        internal SqlBuilder AddClause(string keyword, string token, string glue, string pre, string post, bool singular = true) => 
+            AddClause(keyword, new[] { token }, glue, pre, post, singular);
+
+        internal SqlBuilder AddClause(string keyword, string[] tokens, string glue, string pre, string post, bool singular = true)
         {
             if (!_clauses.ContainsKey(keyword))
             {                
-                _clauses[keyword] = new SqlClauseSet(glue, pre, post, singular);
+                _clauses[keyword] = new SqlClauseSet(singular ? glue : " ", pre, post);
             }
 
-            _clauses[keyword].Add(new SqlClause(token, singular ? null : glue));
+            _clauses[keyword].Add(new SqlClause(glue, singular ? null : glue, tokens));
 
             return this;
         }
@@ -93,6 +96,6 @@ namespace Sequel
         internal void SetTemplate(string[] template) =>
             _template = template.Length > 0 ?
                 template :
-                throw new ArgumentException("Custom template has no element");
+                throw new ArgumentException("Custom template has no elements");
     }
 }

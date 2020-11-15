@@ -38,8 +38,7 @@
               token: string.Concat("(", n.ToString(), ")"),
               glue: null,
               pre: "TOP",
-              post: null,
-              singular: true);
+              post: null);
 
         /// <summary>
         /// OFFSET x ROWS FETCH NEXT y ROWS ONLY
