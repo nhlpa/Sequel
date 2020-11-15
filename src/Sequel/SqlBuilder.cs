@@ -21,8 +21,8 @@ namespace Sequel
 
         private string[] _template;
         private readonly IDictionary<string, SqlClauseSet> _clauses = new Dictionary<string, SqlClauseSet>();
-        private string _pre;
-        private string _post;
+        private readonly string _pre;
+        private readonly string _post;
 
         /// <summary>
         /// Construct a new instance of SqlBuilder with (optional) pre- and post-SQL
