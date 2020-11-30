@@ -20,7 +20,7 @@
 
     <!-- NuGet config -->
     <PackageId>Sequel</PackageId>
-    <PackageVersion>3.0.1</PackageVersion>
+    <PackageVersion>3.0.2</PackageVersion>
     <PackageTags>sql;query;query builder;fluent query builder</PackageTags>
     <PackageProjectUrl>https://github.com/pimbrouwers/Sequel</PackageProjectUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
