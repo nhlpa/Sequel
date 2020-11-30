@@ -76,11 +76,11 @@ namespace Sequel
         internal SqlBuilder AddClause(string keyword, string token, string glue, string pre, string post, bool singular = true) => 
             AddClause(keyword, new[] { token }, glue, pre, post, singular);
 
-        internal SqlBuilder AddClause(string keyword, string[] tokens, string glue, string pre, string post, bool singular = true)
+        internal SqlBuilder AddClause(string keyword, string[] tokens, string glue, string pre, string post, bool singular = true, bool predicate = false)
         {
             if (!_clauses.ContainsKey(keyword))
             {                
-                _clauses[keyword] = new SqlClauseSet(singular ? glue : " ", pre, post);
+                _clauses[keyword] = new SqlClauseSet(singular ? glue : " ", pre, post, predicate);
             }
 
             _clauses[keyword].Add(new SqlClause(glue, singular ? null : glue, tokens));

@@ -14,9 +14,5 @@
         internal string Pre { get; }
         internal string Glue { get; }
         internal string[] Tokens { get; }
-
-        public override string ToString() => ToSql();
-
-        internal string ToSql() => string.Concat(Pre, string.Join(Glue, Tokens));
     }
 }

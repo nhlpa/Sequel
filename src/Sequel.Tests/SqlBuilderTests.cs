@@ -73,6 +73,21 @@ namespace Sequel.Tests
         }
 
         [Fact]
+        public void SelectStarWhereMultipleOrTest()
+        {
+            var sqlBuilder = new SqlBuilder()
+                       .Select("*")
+                       .From("dbo.Test")                       
+                       .Where("Id = 1")
+                       .Where("Num = 2")
+                       .WhereOr("Col = 3");
+
+            var result = sqlBuilder.ToSql();
+
+            Assert.Equal("SELECT * FROM dbo.Test WHERE Id = 1 AND Num = 2 OR Col = 3", result);
+        }
+
+        [Fact]
         public void SelectStarWhereMultipleParamsTest()
         {
             var sqlBuilder = new SqlBuilder()
@@ -187,13 +202,13 @@ namespace Sequel.Tests
         {
             var sqlBuilder = new SqlBuilder()
                                  .Select("Id")
-                                 .Select("Count(Salary) as TotalSalary")
+                                 .Select("COUNT(Salary) as TotalSalary")
                                  .From("dbo.Test")
                                  .GroupBy("Id");
 
             var result = sqlBuilder.ToSql();
 
-            Assert.Equal("SELECT Id, Count(Salary) as TotalSalary FROM dbo.Test GROUP BY Id", result);
+            Assert.Equal("SELECT Id, COUNT(Salary) as TotalSalary FROM dbo.Test GROUP BY Id", result);
         }
 
         [Fact]
@@ -201,14 +216,45 @@ namespace Sequel.Tests
         {
             var sqlBuilder = new SqlBuilder()
                                  .Select("Id")
-                                 .Select("Count(Salary) as TotalSalary")
+                                 .Select("COUNT(Salary) as TotalSalary")
                                  .From("dbo.Test")
                                  .GroupBy("Id")
-                                 .Having("Count(Salary) > 100");
+                                 .Having("COUNT(Salary) > 100");
 
             var result = sqlBuilder.ToSql();
 
-            Assert.Equal("SELECT Id, Count(Salary) as TotalSalary FROM dbo.Test GROUP BY Id HAVING Count(Salary) > 100", result);
+            Assert.Equal("SELECT Id, COUNT(Salary) as TotalSalary FROM dbo.Test GROUP BY Id HAVING COUNT(Salary) > 100", result);
+        }
+
+        [Fact]
+        public void SelectGroupByHavingMultipleTest()
+        {
+            var sqlBuilder = new SqlBuilder()
+                                 .Select("Id")
+                                 .Select("COUNT(Salary) as TotalSalary")
+                                 .From("dbo.Test")
+                                 .GroupBy("Id")
+                                 .Having("COUNT(Salary) > 100", "MAX(Age) > 3");
+
+            var result = sqlBuilder.ToSql();
+
+            Assert.Equal("SELECT Id, COUNT(Salary) as TotalSalary FROM dbo.Test GROUP BY Id HAVING COUNT(Salary) > 100 AND MAX(Age) > 3", result);
+        }
+
+        [Fact]
+        public void SelectGroupByHavingMultipleOrTest()
+        {
+            var sqlBuilder = new SqlBuilder()
+                                 .Select("Id")
+                                 .Select("COUNT(Salary) as TotalSalary")
+                                 .From("dbo.Test")
+                                 .GroupBy("Id")
+                                 .Having("COUNT(Salary) > 100", "MAX(Age) > 3")
+                                 .HavingOr("SUM(Points) > 1000");
+
+            var result = sqlBuilder.ToSql();
+
+            Assert.Equal("SELECT Id, COUNT(Salary) as TotalSalary FROM dbo.Test GROUP BY Id HAVING COUNT(Salary) > 100 AND MAX(Age) > 3 OR SUM(Points) > 1000", result);
         }
 
         [Fact]

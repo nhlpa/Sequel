@@ -91,15 +91,28 @@ namespace Sequel
               post: null);
 
         /// <summary>
-        /// HAVING predicates
+        /// HAVING [AND] predicates
         /// </summary>
-        public static SqlBuilder Having(this SqlBuilder sql, params string[] predicate) =>
+        public static SqlBuilder Having(this SqlBuilder sql, params string[] predicates) =>
           sql.AddClause(
               keyword: "having",
-              tokens: predicate,
-              glue: ", ",
+              tokens: predicates,
+              glue: " AND ",
               pre: "HAVING ",
-              post: null);
+              post: null,
+              predicate: true);
+
+        /// <summary>
+        /// HAVING [OR] predicates
+        /// </summary>
+        public static SqlBuilder HavingOr(this SqlBuilder sql, params string[] predicates) =>
+          sql.AddClause(
+              keyword: "having",
+              tokens: predicates,
+              glue: " OR ",
+              pre: "HAVING ",
+              post: null,
+              predicate: true);
 
         /// <summary>
         /// INSERT INTO table
@@ -348,10 +361,11 @@ namespace Sequel
         public static SqlBuilder Where(this SqlBuilder sql, params string[] predicates) =>
           sql.AddClause(
               keyword: "where",
-              token: string.Join(" AND ", predicates),
+              tokens: predicates,
               glue: " AND ",
               pre: "WHERE ",
-              post: null);
+              post: null,
+              predicate: true);
 
         /// <summary>
         /// WHERE [OR] predicates
@@ -359,10 +373,11 @@ namespace Sequel
         public static SqlBuilder WhereOr(this SqlBuilder sql, params string[] predicates) =>
           sql.AddClause(
               keyword: "where",
-              token: string.Join(" OR ", predicates),
+              tokens: predicates,
               glue: " OR ",
               pre: "WHERE ",
-              post: null);
+              post: null,
+              predicate: true);
 
         private static IEnumerable<string> AliasColumns(string alias, string[] columns) =>
             columns.Select(c => string.Concat(string.Concat(alias, "."), c));
