@@ -569,6 +569,62 @@ namespace Sequel.Tests
         }
 
         [Fact]
+        public void CrossJoinTest()
+        {
+            var sqlBuilder = new SqlBuilder()
+                                .Select("*")
+                                .From("dbo.Test t")
+                                .CrossJoin("dbo.Employee");
+
+            var result = sqlBuilder.ToSql();
+
+            Assert.Equal("SELECT * FROM dbo.Test t CROSS JOIN dbo.Employee", result);
+        }
+
+        [Fact]
+        public void CrossJoinMultipleTest()
+        {
+            var sqlBuilder = new SqlBuilder()
+                                .Select("*")
+                                .From("dbo.Test t")
+                                .CrossJoin("dbo.Employee")
+                                .CrossJoin("dbo.Manager");
+
+            var result = sqlBuilder.ToSql();
+
+            Assert.Equal("SELECT * FROM dbo.Test t CROSS JOIN dbo.Employee CROSS JOIN dbo.Manager", result);
+        }
+
+        [Fact]
+        public void CrossJoinAliasTest()
+        {
+            var sqlBuilder = new SqlBuilder()
+                                .Select("*")
+                                .From("dbo.Test t")
+                                .CrossJoin("dbo.Employee", "e");
+
+            var result = sqlBuilder.ToSql();
+
+            Assert.Equal("SELECT * FROM dbo.Test t CROSS JOIN dbo.Employee AS e", result);
+        }
+
+        [Fact]
+        public void CrossJoinSqlBuilderTest()
+        {
+            var emp = new SqlBuilder().Select("*").From("dbo.Employee");
+
+            var sqlBuilder = new SqlBuilder()
+                                .Select("*")
+                                .From("dbo.Test t")
+                                .CrossJoin(emp, "e");
+
+            var result = sqlBuilder.ToSql();
+
+            Assert.Equal("SELECT * FROM dbo.Test t CROSS JOIN (SELECT * FROM dbo.Employee) AS e", result);
+        }
+
+
+        [Fact]
         public void UpdateTest()
         {
             var sqlBuilder = new SqlBuilder()

@@ -9,6 +9,30 @@ namespace Sequel
     public static class SqlBuilderExtensions
     {
         /// <summary>
+        /// CROSS JOIN table and predicate
+        /// </summary>
+        public static SqlBuilder CrossJoin(this SqlBuilder sql, string table) =>
+          sql.AddClause(
+              keyword: "join",
+              token: table,
+              glue: "CROSS JOIN ",
+              pre: null,
+              post: null,
+              singular: false);
+
+        /// <summary>
+        /// CROSS JOIN table with alias and predicate
+        /// </summary>
+        public static SqlBuilder CrossJoin(this SqlBuilder sql, string table, string alias) =>
+          sql.CrossJoin(table: string.Concat(table, " AS ", alias));
+
+        /// <summary>
+        /// [INNER] JOIN table from SqlBuilder with alias and predicate
+        /// </summary>
+        public static SqlBuilder CrossJoin(this SqlBuilder sql, SqlBuilder derivedTable, string alias) =>
+          sql.CrossJoin(table: string.Concat("(", derivedTable.ToSql(), ")"), alias: alias);
+
+        /// <summary>
         /// EXISTS predicate subquery
         /// </summary>
         public static SqlBuilder Exists(this SqlBuilder sql, SqlBuilder sqlBuilder) =>
