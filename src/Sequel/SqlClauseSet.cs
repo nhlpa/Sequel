@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace Sequel
 {
@@ -29,12 +28,26 @@ namespace Sequel
             }
             else if (Predicate)
             {
-                var clauses = this.Select((x, i) => string.Concat(i == 0 ? x.Pre : x.Glue, string.Join(x.Glue, x.Tokens))).ToArray();
+                var clauses = new string[this.Count];
+
+                for (int i = 0; i < this.Count; i++)
+                {
+                    var x = this[i];
+                    clauses[i] = string.Concat(i == 0 ? x.Pre : x.Glue, string.Join(x.Glue, x.Tokens));
+                }
+
                 return string.Concat(Pre, string.Concat(clauses), Post);
             }
             else
             {
-                var clauses = this.Select(x => string.Concat(x.Pre, string.Join(x.Glue, x.Tokens))).ToArray();
+                var clauses = new string[this.Count];
+
+                for (int i = 0; i < this.Count; i++)
+                {
+                    var x = this[i];
+                    clauses[i] = string.Concat(x.Pre, string.Join(x.Glue, x.Tokens));
+                }
+
                 return string.Concat(Pre, string.Concat(string.Join(Glue, clauses), Post));
             }
         }

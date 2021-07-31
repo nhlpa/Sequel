@@ -62,9 +62,9 @@ namespace Sequel.Tests
         public void SelectStarWhereMultipleTest()
         {
             var sqlBuilder = new SqlBuilder()
+                       .Where("Id = 1")
                        .Select("*")
                        .From("dbo.Test")
-                       .Where("Id = 1")
                        .Where("Num = 2");
 
             var result = sqlBuilder.ToSql();

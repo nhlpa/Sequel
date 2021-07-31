@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace Sequel
 {
@@ -250,7 +249,7 @@ namespace Sequel
         public static SqlBuilder OrderByWithAlias(this SqlBuilder sql, string alias, params string[] columns) =>
           sql.AddClause(
               keyword: "orderby",
-              tokens: AliasColumns(alias, columns).ToArray(),
+              tokens: AliasColumns(alias, columns),
               glue: ", ",
               pre: "ORDER BY ",
               post: null);
@@ -261,9 +260,12 @@ namespace Sequel
         public static SqlBuilder OrderByDesc(this SqlBuilder sql, params string[] columns)
         {            
             var descSuffix = " DESC";
+
+            var suffixedColumns = SuffixColumns(descSuffix, columns);
+
             return sql.AddClause(
                 keyword: "orderby",
-                tokens: columns.Select(c => string.Concat(c, descSuffix)).ToArray(),
+                tokens: suffixedColumns,
                 glue: ", ",
                 pre: "ORDER BY ",
                 post: null);
@@ -275,9 +277,14 @@ namespace Sequel
         public static SqlBuilder OrderByDescWithAlias(this SqlBuilder sql, string alias, params string[] columns)
         {
             var descSuffix = " DESC";
+
+            var aliasedColumns = AliasColumns(alias, columns);
+
+            var suffixedColumns = SuffixColumns(descSuffix, aliasedColumns);
+
             return sql.AddClause(
                 keyword: "orderby",
-                tokens: AliasColumns(alias, columns).Select(c => string.Concat(c, descSuffix)).ToArray(),
+                tokens: suffixedColumns,
                 glue: ", ",
                 pre: "ORDER BY ",
                 post: null);
@@ -341,7 +348,7 @@ namespace Sequel
         /// SELECT columns and apply provided alias
         /// </summary>
         public static SqlBuilder SelectWithAlias(this SqlBuilder sql, string alias, params string[] columns) =>
-            sql.Select(AliasColumns(alias, columns).ToArray());
+            sql.Select(AliasColumns(alias, columns));
 
         /// <summary>
         /// UPDATE &gt; SET column/value pairs
@@ -403,7 +410,28 @@ namespace Sequel
               post: null,
               predicate: true);
 
-        private static IEnumerable<string> AliasColumns(string alias, string[] columns) =>
-            columns.Select(c => string.Concat(string.Concat(alias, "."), c));
+        private static string[] AliasColumns(string alias, string[] columns)
+        {
+            var aliasedColumns = new string[columns.Length];
+            for (int i = 0; i < columns.Length; i++)
+            {
+                aliasedColumns[i] = string.Concat(string.Concat(alias, "."), columns[i]);
+            }
+
+            return aliasedColumns;
+            //columns.Select(c => string.Concat(string.Concat(alias, "."), c));
+        }
+
+        private static string[] SuffixColumns(string suffix, string[] columns)
+        {
+            var suffixedColumns = new string[columns.Length];
+            for (int i = 0; i < columns.Length; i++)
+            {
+                suffixedColumns[i] = string.Concat(columns[i], suffix);
+            }
+
+            return suffixedColumns;
+            //columns.Select(c => string.Concat(string.Concat(alias, "."), c));
+        }
     }
 }

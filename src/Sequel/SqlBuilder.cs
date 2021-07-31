@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Sequel
 {
@@ -45,15 +44,22 @@ namespace Sequel
         /// </summary>
         /// <returns></returns>
         public string ToSql()
-        {
-            var templateClauses = 
-                _template
-                    .Where(key => _clauses.ContainsKey(key))
-                    .Select(key => _clauses[key].ToSql());
+        {            
+            // format and combine user SQL in order of template
+            var templateClauses = new List<string>();
 
+            foreach (var keyword in _template)
+            {
+                if (_clauses.ContainsKey(keyword))
+                {
+                    templateClauses.Add(_clauses[keyword].ToSql());
+                }
+            }
+
+            // join all user SQL
             var sql = string.Join(" ", templateClauses);
 
-            if(!string.IsNullOrWhiteSpace(_pre) && !string.IsNullOrWhiteSpace(_post))
+            if (!string.IsNullOrWhiteSpace(_pre) && !string.IsNullOrWhiteSpace(_post))
             {
                 return string.Concat(string.Concat(_pre, sql), _post);
             }
@@ -65,7 +71,8 @@ namespace Sequel
             {
                 return string.Concat(sql, _post);
             }
-            else {
+            else 
+            {
                 return sql;
             }
         }
