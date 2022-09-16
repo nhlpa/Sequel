@@ -2,7 +2,7 @@
   <PropertyGroup>
     <AssemblyName>Sequel</AssemblyName>
     <RootNamespace>Sequel</RootNamespace>
-    <Version>3.1.2</Version>
+    <Version>3.1.3</Version>
     <CurrentYear>$([System.DateTime]::Now.ToString(yyyy))</CurrentYear>
 
     <!-- General Info-->
@@ -26,6 +26,8 @@
     <PackageTags>sql;query;query builder;fluent query builder</PackageTags>
     <PackageProjectUrl>https://github.com/nhlpa/Sequel</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/nhlpa/Sequel</RepositoryUrl>
