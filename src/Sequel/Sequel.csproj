@@ -1,15 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AssemblyName>Sequal</AssemblyName>
-    
+    <AssemblyName>Sequel</AssemblyName>
+    <RootNamespace>Sequel</RootNamespace>
+    <Version>3.1.1</Version>
+    <CurrentYear>$([System.DateTime]::Now.ToString(yyyy))</CurrentYear>
+
     <!-- General Info-->
     <Product>Sequel</Product>
     <Description>An efficient SQL builder with an interface that emulates writing actual SQL queries.</Description>
-    <Copyright>Copyright 2020 Pim Brouwers</Copyright>
+    <Copyright>Copyright $(CurrentYear) NHLPA</Copyright>
     <Authors>Pim Brouwers</Authors>
     <NeutralLanguage>en-CA</NeutralLanguage>
 
-    <!-- Build Config -->    
+    <!-- Build Config -->
     <TargetFramework>netstandard2.0</TargetFramework>
     <DebugType>portable</DebugType>
     <OutputType>Library</OutputType>
@@ -20,19 +23,24 @@
 
     <!-- NuGet config -->
     <PackageId>Sequel</PackageId>
-    <PackageVersion>3.1.0</PackageVersion>
     <PackageTags>sql;query;query builder;fluent query builder</PackageTags>
     <PackageProjectUrl>https://github.com/pimbrouwers/Sequel</PackageProjectUrl>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/pimbrouwers/Sequel</RepositoryUrl>
-    
+
     <!-- SourceLink settings -->
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
   </PropertyGroup>
-  
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+    <PackageReference Update="FSharp.Core" Version="4.5.2" />
+  </ItemGroup>
+
   <ItemGroup>
     <Compile Include="SqlClause.cs" />
     <Compile Include="SqlClauseSet.cs" />
@@ -40,5 +48,14 @@
     <Compile Include="SqlBuilderExtensions.cs" />
     <Compile Include="MsSqlBuilderExtensions.cs" />
     <Compile Include="MySqlBuilderExtensions.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../../assets/icon.png">
+      <Pack>true</Pack>
+      <PackagePath>$(PackageIconUrl)</PackagePath>
+    </None>
+
+    <None Include="../../README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 </Project>

@@ -1,7 +1,0 @@
-language: csharp  
-mono: none  
-dotnet: 5.0.100
-solution: Sequel.sln
-script:
-  - dotnet restore
-  - dotnet test  

@@ -1,7 +1,7 @@
 # Sequel
 
 [![NuGet Version](https://img.shields.io/nuget/v/Sequel.svg)](https://www.nuget.org/packages/Sequel)
-[![Build Status](https://travis-ci.org/pimbrouwers/Sequel.svg?branch=master)](https://travis-ci.org/pimbrouwers/Sequel)
+[![build](https://github.com/nhlpa/Sequel/actions/workflows/build.yml/badge.svg)](https://github.com/nhlpa/Sequel/actions/workflows/build.yml)
 
 An efficient SQL builder with an interface that emulates writing actual SQL queries.
 
@@ -122,19 +122,19 @@ using(var conn = new SqlConnection("your connection string")
     .From("dbo.Test")
     .Where("Id", "@Id");
 
-  var sql = sqlBuilder.ToSql(); // .ToString() also works 
+  var sql = sqlBuilder.ToSql(); // .ToString() also works
   /*
   SELECT Id, Salary FROM dbo.Test WHERE Id = @Id
-  */ 
-    
+  */
+
   var result = conn.Query(sql, new { Id = 1 });
 }
 ```
 
 ## Find a bug?
 
-There's an [issue](https://github.com/pimbrouwers/sequel/issues) for that.
+There's an [issue](https://github.com/nhlpa/Sequel/issues) for that.
 
 ## License
 
-Built with ♥ by [Pim Brouwers](https://github.com/pimbrouwers) in Toronto, ON. Licensed under [GNU](https://github.com/pimbrouwers/sequel/blob/master/LICENSE).
+Built with ♥ by [NHLPA Engineering](https://github.com/nhlpa) in Toronto, ON. Licensed under [MIT](https://github.com/nhlpa/Sequel/blob/master/LICENSE).
