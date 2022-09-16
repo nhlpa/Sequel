@@ -2,14 +2,14 @@
   <PropertyGroup>
     <AssemblyName>Sequel</AssemblyName>
     <RootNamespace>Sequel</RootNamespace>
-    <Version>3.1.1</Version>
+    <Version>3.1.2</Version>
     <CurrentYear>$([System.DateTime]::Now.ToString(yyyy))</CurrentYear>
 
     <!-- General Info-->
     <Product>Sequel</Product>
     <Description>An efficient SQL builder with an interface that emulates writing actual SQL queries.</Description>
     <Copyright>Copyright $(CurrentYear) NHLPA</Copyright>
-    <Authors>Pim Brouwers</Authors>
+    <Authors>NHLPA Engineering</Authors>
     <NeutralLanguage>en-CA</NeutralLanguage>
 
     <!-- Build Config -->
@@ -24,11 +24,11 @@
     <!-- NuGet config -->
     <PackageId>Sequel</PackageId>
     <PackageTags>sql;query;query builder;fluent query builder</PackageTags>
-    <PackageProjectUrl>https://github.com/pimbrouwers/Sequel</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/nhlpa/Sequel</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/pimbrouwers/Sequel</RepositoryUrl>
+    <RepositoryUrl>https://github.com/nhlpa/Sequel</RepositoryUrl>
 
     <!-- SourceLink settings -->
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
