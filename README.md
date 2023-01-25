@@ -38,7 +38,7 @@ SELECT * FROM dbo.Test t INNER JOIN dbo.Employee e on e.Id = t.EmployeeId LEFT J
 ```c#
 var sqlBuilder = new SqlBuilder()
   .Insert("dbo.Test")
-  .Columns("Name", "Salary")
+  .Into("Name", "Salary")
   .Values("'John'", "50")
   .Values("'Jane'", "100");
 
